@@ -1,0 +1,48 @@
+.main__card{
+    position: relative;
+}
+.card__body{
+position: absolute;
+bottom: 0 ;
+left: 0;
+background-color: #fff;
+width: 100%;
+}
+.main__card:hover .card__body{
+    // transform: scaleY(1.5);
+    height: 90% !important;
+    margin-top: 20px;
+   
+}
+.main__card:hover .card__titile{
+color: rgb(170, 255, 0) !important;
+    margin-top: 20px;
+   font-weight: bold;
+   box-shadow:  2px 2px 2px #ffffff51;
+}
+.card__btn{
+    position: absolute;
+    top: 60%;
+    left: 30%;
+    border-radius: 30px;
+ 
+}
+.card__overview{
+    display: none;
+}
+.card__body:hover  .card__overview{
+    // transform: scaleY(1.5);
+    display: block;
+    color: rgb(255, 166, 0) !important;
+    font-size: 16px !important;
+    margin-top: 50px;
+}
+.icon___card{
+    position: absolute;
+    top: 2px ;
+    width: 40%;
+    padding: 5px 0;
+    margin: 0 5px;
+    height: 30px;
+    // background-color: #ffffff7a;
+}

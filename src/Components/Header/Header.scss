@@ -1,0 +1,23 @@
+
+.header{
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #17171742;
+}
+img{
+    width: 150px;
+    // border-radius: 50%;
+    color: #444;
+    background-color: black;
+}
+li{position: relative;
+    font-size: 22px;
+    &:hover{
+  border-bottom: 2px solid red
+    }
+}
+.head__baground__shadow{
+    box-shadow: 2px 1px 7px #ff05053e;
+}
