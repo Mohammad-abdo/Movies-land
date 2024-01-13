@@ -21,6 +21,7 @@ const TopRated = props => {
           const params={}
           const response= await tmdbApi.getMoviesList(movieType.top_rated,{params});
           setItem(response.results)
+          console.log(response);
         } catch (error) {
           console.log(error);
         } 
