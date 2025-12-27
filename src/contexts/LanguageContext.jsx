@@ -106,12 +106,19 @@ export const LanguageProvider = ({ children }) => {
                 'details.notFound': 'المحتوى غير موجود',
                 'details.goHome': 'العودة للصفحة الرئيسية',
                 
+                // Collections
+                'collections.movies': 'فيلم',
+                'collections.noCollectionsFound': 'لم يتم العثور على سلاسل أفلام',
+                'collections.loadError': 'خطأ في تحميل السلاسل',
+                
                 // Common
                 'common.loading': 'جاري التحميل...',
                 'common.error': 'خطأ',
                 'common.noEpisodes': 'لا توجد حلقات متاحة',
                 'common.episode': 'حلقة',
                 'common.episodes': 'حلقات',
+                'common.movie': 'فيلم',
+                'common.movies': 'أفلام',
                 
                 // Pages
                 'pages.discover': 'استكشف',
@@ -227,12 +234,19 @@ export const LanguageProvider = ({ children }) => {
                 'details.notFound': 'Content not found',
                 'details.goHome': 'Go to Home',
                 
+                // Collections
+                'collections.movies': 'movies',
+                'collections.noCollectionsFound': 'No collections found',
+                'collections.loadError': 'Error loading collections',
+                
                 // Common
                 'common.loading': 'Loading...',
                 'common.error': 'Error',
                 'common.noEpisodes': 'No episodes available',
                 'common.episode': 'Episode',
                 'common.episodes': 'Episodes',
+                'common.movie': 'movie',
+                'common.movies': 'movies',
                 
                 // Pages
                 'pages.discover': 'Discover',

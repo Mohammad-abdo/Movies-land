@@ -1,5 +1,8 @@
 // MangaDex API integration
-const MANGA_DEX_BASE_URL = 'https://api.mangadex.org';
+// Use proxy in production to avoid CORS issues
+const MANGA_DEX_BASE_URL = process.env.NODE_ENV === 'production' 
+    ? '/api/mangadex-proxy' 
+    : 'https://api.mangadex.org';
 
 // Helper function to build image URL
 export const getMangaImageUrl = (manga, size = 'medium') => {
@@ -36,9 +39,14 @@ export const getMangaDescription = (manga) => {
 // Fetch trending/popular manga
 export const getPopularManga = async (limit = 20, offset = 0) => {
     try {
-        const response = await fetch(
-            `${MANGA_DEX_BASE_URL}/manga?limit=${limit}&offset=${offset}&order[followedCount]=desc&contentRating[]=safe&contentRating[]=suggestive&includes[]=cover_art&includes[]=author`
-        );
+        const url = process.env.NODE_ENV === 'production'
+            ? `${MANGA_DEX_BASE_URL}?path=manga&limit=${limit}&offset=${offset}&order[followedCount]=desc&contentRating[]=safe&contentRating[]=suggestive&includes[]=cover_art&includes[]=author`
+            : `${MANGA_DEX_BASE_URL}/manga?limit=${limit}&offset=${offset}&order[followedCount]=desc&contentRating[]=safe&contentRating[]=suggestive&includes[]=cover_art&includes[]=author`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         return data;
     } catch (error) {
@@ -51,9 +59,14 @@ export const getPopularManga = async (limit = 20, offset = 0) => {
 export const searchManga = async (query, limit = 20, offset = 0) => {
     try {
         const encodedQuery = encodeURIComponent(query);
-        const response = await fetch(
-            `${MANGA_DEX_BASE_URL}/manga?title=${encodedQuery}&limit=${limit}&offset=${offset}&contentRating[]=safe&contentRating[]=suggestive&includes[]=cover_art&includes[]=author`
-        );
+        const url = process.env.NODE_ENV === 'production'
+            ? `${MANGA_DEX_BASE_URL}?path=manga&title=${encodedQuery}&limit=${limit}&offset=${offset}&contentRating[]=safe&contentRating[]=suggestive&includes[]=cover_art&includes[]=author`
+            : `${MANGA_DEX_BASE_URL}/manga?title=${encodedQuery}&limit=${limit}&offset=${offset}&contentRating[]=safe&contentRating[]=suggestive&includes[]=cover_art&includes[]=author`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         return data;
     } catch (error) {
@@ -65,9 +78,14 @@ export const searchManga = async (query, limit = 20, offset = 0) => {
 // Get manga details by ID
 export const getMangaDetails = async (mangaId) => {
     try {
-        const response = await fetch(
-            `${MANGA_DEX_BASE_URL}/manga/${mangaId}?includes[]=cover_art&includes[]=author&includes[]=artist`
-        );
+        const url = process.env.NODE_ENV === 'production'
+            ? `${MANGA_DEX_BASE_URL}?path=manga/${mangaId}&includes[]=cover_art&includes[]=author&includes[]=artist`
+            : `${MANGA_DEX_BASE_URL}/manga/${mangaId}?includes[]=cover_art&includes[]=author&includes[]=artist`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         return data;
     } catch (error) {
@@ -79,9 +97,14 @@ export const getMangaDetails = async (mangaId) => {
 // Get manga chapters
 export const getMangaChapters = async (mangaId, limit = 100, offset = 0, language = 'en') => {
     try {
-        const response = await fetch(
-            `${MANGA_DEX_BASE_URL}/manga/${mangaId}/feed?limit=${limit}&offset=${offset}&translatedLanguage[]=${language}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive`
-        );
+        const url = process.env.NODE_ENV === 'production'
+            ? `${MANGA_DEX_BASE_URL}?path=manga/${mangaId}/feed&limit=${limit}&offset=${offset}&translatedLanguage[]=${language}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive`
+            : `${MANGA_DEX_BASE_URL}/manga/${mangaId}/feed?limit=${limit}&offset=${offset}&translatedLanguage[]=${language}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         return data;
     } catch (error) {
@@ -94,7 +117,14 @@ export const getMangaChapters = async (mangaId, limit = 100, offset = 0, languag
 export const getChapterPages = async (chapterId) => {
     try {
         // First get chapter data
-        const chapterResponse = await fetch(`${MANGA_DEX_BASE_URL}/at-home/server/${chapterId}`);
+        const chapterUrl = process.env.NODE_ENV === 'production'
+            ? `${MANGA_DEX_BASE_URL}?path=at-home/server/${chapterId}`
+            : `${MANGA_DEX_BASE_URL}/at-home/server/${chapterId}`;
+        
+        const chapterResponse = await fetch(chapterUrl);
+        if (!chapterResponse.ok) {
+            throw new Error(`HTTP error! status: ${chapterResponse.status}`);
+        }
         const chapterData = await chapterResponse.json();
         
         if (!chapterData.baseUrl || !chapterData.chapter) {
@@ -126,7 +156,14 @@ export const getChapterPages = async (chapterId) => {
 // Get chapter details
 export const getChapterDetails = async (chapterId) => {
     try {
-        const response = await fetch(`${MANGA_DEX_BASE_URL}/chapter/${chapterId}?includes[]=manga&includes[]=scanlation_group`);
+        const url = process.env.NODE_ENV === 'production'
+            ? `${MANGA_DEX_BASE_URL}?path=chapter/${chapterId}&includes[]=manga&includes[]=scanlation_group`
+            : `${MANGA_DEX_BASE_URL}/chapter/${chapterId}?includes[]=manga&includes[]=scanlation_group`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         return data;
     } catch (error) {

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Spinner, Alert } from 'react-bootstrap';
+import { Spinner, Alert, Container } from 'react-bootstrap';
 import tmdbApi from '../api/tmdbApi';
 import ApiConfig from '../api/api';
 import PageHeader from '../Components/page-header/PageHeader';
-import MovieCard from '../Components/movieCard/MovieCard';
-import { category } from '../api/tmdbApi';
+import { useLanguage } from '../contexts/LanguageContext';
 import './Collections.scss';
 
 const Collections = () => {
+    const { t } = useLanguage();
     const [collections, setCollections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -16,48 +16,71 @@ const Collections = () => {
     useEffect(() => {
         // Fetch popular collections
         // Note: TMDB doesn't have a direct collections list endpoint
-        // We'll use popular movies and group by collection
+        // We'll fetch multiple pages of popular movies to find collections
         const fetchCollections = async () => {
             try {
                 setLoading(true);
                 setError(null);
                 
-                // Get popular movies that belong to collections
-                const params = { params: { page: 1 } };
-                const response = await tmdbApi.getMoviesList('popular', params);
-                
-                // Extract unique collections
+                // Fetch multiple pages to get more collections
                 const collectionMap = new Map();
-                response.results?.forEach(movie => {
-                    if (movie.belongs_to_collection) {
-                        const collectionId = movie.belongs_to_collection.id;
-                        if (!collectionMap.has(collectionId)) {
-                            collectionMap.set(collectionId, {
-                                id: collectionId,
-                                name: movie.belongs_to_collection.name,
-                                poster_path: movie.belongs_to_collection.poster_path,
-                                backdrop_path: movie.belongs_to_collection.backdrop_path,
-                                movies: []
-                            });
+                const pagesToFetch = [1, 2, 3, 4, 5];
+                
+                // Fetch multiple pages in parallel
+                const pagePromises = pagesToFetch.map(page => 
+                    tmdbApi.getMoviesList('popular', { params: { page } })
+                );
+                
+                const responses = await Promise.all(pagePromises);
+                
+                // Extract unique collections from all pages
+                responses.forEach(response => {
+                    response.results?.forEach(movie => {
+                        if (movie.belongs_to_collection) {
+                            const collectionId = movie.belongs_to_collection.id;
+                            if (!collectionMap.has(collectionId)) {
+                                collectionMap.set(collectionId, {
+                                    id: collectionId,
+                                    name: movie.belongs_to_collection.name,
+                                    poster_path: movie.belongs_to_collection.poster_path,
+                                    backdrop_path: movie.belongs_to_collection.backdrop_path,
+                                });
+                            }
                         }
-                        collectionMap.get(collectionId).movies.push(movie);
-                    }
+                    });
                 });
                 
-                // Fetch full collection details
-                const collectionPromises = Array.from(collectionMap.values()).slice(0, 10).map(async (col) => {
+                // Convert map to array and fetch full collection details
+                const collectionArray = Array.from(collectionMap.values());
+                
+                // Fetch full collection details for each collection
+                const collectionPromises = collectionArray.slice(0, 20).map(async (col) => {
                     try {
                         const details = await tmdbApi.getCollection(col.id);
                         return details;
                     } catch (err) {
-                        return col;
+                        console.error(`Error fetching collection ${col.id}:`, err);
+                        // Return basic collection info if details fetch fails
+                        return {
+                            id: col.id,
+                            name: col.name,
+                            poster_path: col.poster_path,
+                            backdrop_path: col.backdrop_path,
+                            parts: []
+                        };
                     }
                 });
                 
                 const collectionsData = await Promise.all(collectionPromises);
-                setCollections(collectionsData.filter(c => c));
+                // Filter out null/undefined and collections without parts
+                const validCollections = collectionsData.filter(c => c && c.parts && c.parts.length > 0);
+                setCollections(validCollections);
+                
+                if (validCollections.length === 0) {
+                    setError(t('collections.noCollectionsFound'));
+                }
             } catch (err) {
-                setError(err.message || 'Failed to load collections');
+                setError(err.message || t('collections.loadError'));
                 console.error('Error fetching collections:', err);
             } finally {
                 setLoading(false);
@@ -65,15 +88,18 @@ const Collections = () => {
         };
 
         fetchCollections();
-    }, []);
+    }, [t]);
 
     if (loading) {
         return (
             <div className="collections-loading">
-                <PageHeader>سلاسل الأفلام</PageHeader>
-                <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
-                    <Spinner animation="border" variant="danger" size="lg" />
-                </div>
+                <PageHeader>{t('nav.collections')}</PageHeader>
+                <Container>
+                    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+                        <Spinner animation="border" variant="danger" size="lg" />
+                        <span className="ms-3">{t('common.loading')}</span>
+                    </div>
+                </Container>
             </div>
         );
     }
@@ -81,32 +107,47 @@ const Collections = () => {
     if (error) {
         return (
             <div className="collections-error">
-                <PageHeader>سلاسل الأفلام</PageHeader>
-                <div className="container my-5">
-                    <Alert variant="danger">
-                        <Alert.Heading>Error</Alert.Heading>
+                <PageHeader>{t('nav.collections')}</PageHeader>
+                <Container>
+                    <Alert variant="danger" className="my-5">
+                        <Alert.Heading>{t('common.error')}</Alert.Heading>
                         <p>{error}</p>
                     </Alert>
-                </div>
+                </Container>
+            </div>
+        );
+    }
+
+    if (collections.length === 0) {
+        return (
+            <div className="collections-page">
+                <PageHeader>{t('nav.collections')}</PageHeader>
+                <Container>
+                    <Alert variant="info" className="my-5">
+                        <p>{t('collections.noCollectionsFound')}</p>
+                    </Alert>
+                </Container>
             </div>
         );
     }
 
     return (
         <div className="collections-page">
-            <PageHeader>سلاسل الأفلام</PageHeader>
-            <div className="container collections-container">
+            <PageHeader>{t('nav.collections')}</PageHeader>
+            <Container className="collections-container">
                 <div className="collections-grid">
                     {collections.map((collection) => (
                         <Link
                             key={collection.id}
-                            to={`/collection/${collection.id}`}
+                            to={`/collections/${collection.id}`}
                             className="collection-card"
                         >
                             <div 
                                 className="collection-backdrop"
                                 style={{
-                                    backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${ApiConfig.backdropImage(collection.backdrop_path)})`
+                                    backgroundImage: collection.backdrop_path 
+                                        ? `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${ApiConfig.backdropImage(collection.backdrop_path)})`
+                                        : 'linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.8))'
                                 }}
                             >
                                 <div className="collection-content">
@@ -115,6 +156,9 @@ const Collections = () => {
                                             src={ApiConfig.w500Image(collection.poster_path)}
                                             alt={collection.name}
                                             className="collection-poster"
+                                            onError={(e) => {
+                                                e.target.style.display = 'none';
+                                            }}
                                         />
                                     )}
                                     <div className="collection-info">
@@ -126,7 +170,7 @@ const Collections = () => {
                                         )}
                                         {collection.parts && (
                                             <div className="collection-count">
-                                                {collection.parts.length} فيلم
+                                                {collection.parts.length} {collection.parts.length === 1 ? t('common.movie') : t('common.movies')}
                                             </div>
                                         )}
                                     </div>
@@ -135,7 +179,7 @@ const Collections = () => {
                         </Link>
                     ))}
                 </div>
-            </div>
+            </Container>
         </div>
     );
 };
