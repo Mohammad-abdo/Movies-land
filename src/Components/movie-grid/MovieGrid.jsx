@@ -47,7 +47,11 @@ const MovieGrid = props => {
 
                         // Add year filter
                         if (filters.year) {
-                            params.params.year = filters.year;
+                            if (props.category === category.movie) {
+                                params.params.primary_release_year = filters.year;
+                            } else {
+                                params.params.first_air_date_year = filters.year;
+                            }
                         }
 
                         // Add rating filter
