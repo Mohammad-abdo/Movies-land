@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
     try {
         // Extract path from query parameters
-        const { path, ...queryParams } = req.query;
+        const path = req.query.path;
         
         if (!path) {
             return res.status(400).json({ error: 'Path parameter is required. Use ?path=manga&limit=20' });
@@ -30,9 +30,21 @@ export default async function handler(req, res) {
         const apiPath = Array.isArray(path) ? path.join('/') : path;
         const apiUrl = `${baseUrl}/${apiPath}`;
 
-        // Build query string from remaining query parameters (excluding path)
-        const filteredParams = { ...queryParams };
-        const queryString = new URLSearchParams(filteredParams).toString();
+        // Build query string manually to handle array parameters properly
+        const queryParts = [];
+        Object.keys(req.query).forEach(key => {
+            if (key !== 'path') {
+                const value = req.query[key];
+                // Handle array values (e.g., contentRating[]=safe&contentRating[]=suggestive)
+                if (Array.isArray(value)) {
+                    value.forEach(v => queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(v)}`));
+                } else if (value !== undefined && value !== null) {
+                    queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+                }
+            }
+        });
+        
+        const queryString = queryParts.join('&');
         const fullUrl = queryString ? `${apiUrl}?${queryString}` : apiUrl;
 
         // Make the request to MangaDex API
@@ -45,8 +57,10 @@ export default async function handler(req, res) {
 
         if (!response.ok) {
             const errorText = await response.text();
+            console.error('MangaDex API error:', response.status, errorText);
             return res.status(response.status).json({ 
                 error: 'API request failed',
+                status: response.status,
                 details: errorText 
             });
         }
