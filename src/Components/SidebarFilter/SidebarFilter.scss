@@ -1,0 +1,206 @@
+@use '../../Sass/' as *;
+
+.sidebar-filter {
+    background: rgba(23, 23, 23, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        h3 {
+            color: $txt-color;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+    }
+
+    &__close {
+        background: none;
+        border: none;
+        color: $txt-color;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba(255, 0, 0, 0.2);
+            color: $main-color;
+        }
+    }
+
+    &__clear {
+        background: rgba(255, 0, 0, 0.2);
+        border: 1px solid $main-color;
+        color: $main-color;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: $main-color;
+            color: white;
+        }
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.filter-label {
+    color: $txt-color;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-select,
+.filter-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem;
+    color: $txt-color;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+        outline: none;
+        border-color: $main-color;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    option {
+        background: $body-bg;
+        color: $txt-color;
+    }
+}
+
+.filter-genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-genre-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    color: $txt-color;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: rgba(255, 0, 0, 0.2);
+        border-color: $main-color;
+        color: $main-color;
+        transform: translateY(-2px);
+    }
+
+    &.active {
+        background: $main-color;
+        border-color: $main-color;
+        color: white;
+        font-weight: 600;
+    }
+}
+
+.filter-rating {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.filter-range {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+    -webkit-appearance: none;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: $main-color;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+
+    &::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: $main-color;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+}
+
+.filter-rating-value {
+    color: $txt-color;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-width: 50px;
+    text-align: right;
+}
+
+.filter-loading {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+@include mobile {
+    .sidebar-filter {
+        position: relative;
+        top: 0;
+    }
+}
+

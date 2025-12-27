@@ -1,48 +1,56 @@
-import React from "react";
-
-import tmdbApi,{ category } from "../../api/tmdbApi";
-import { Link } from "react-router-dom"
-
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { category } from "../../api/tmdbApi";
 import ApiConfig from "../../api/api";
+import './MovieCard.scss';
 
-import './MovieCard.scss'
-// import Button from "../Button/Button";
-import { Card } from "react-bootstrap";
+const MovieCard = props => {
+    const item = props.item;
+    const categoryPath = props.category === category.anime ? 'tv' : category[props.category];
+    const link = '/' + categoryPath + '/' + item.id;
+    const posterUrl = ApiConfig.w500Image(item.poster_path);
+    const title = item.title || item.name;
+    const [imageError, setImageError] = useState(false);
 
-const MovieCard = props =>{
-    const item =props.item
+    const handleImageError = () => {
+        setImageError(true);
+    };
 
-    const link='/'+category[props.category]+'/'+item.id
-    const bg=ApiConfig.originalImage(item.poster_path|| item.backdrop_path)
-    // console.log(item)
- return (
-   <Link to={link}>
-    {/* <div className="movie-card" style={{backgroundImage:`url(${bg})`}}>
-      
-   <div className="card__info">
-   <Button>
-            <i className="fas fa-play"></i>
-        </Button>
-        <h3>{item.title || item.name}</h3>
-   </div>
-    </div> */}
-    <Card className="main__card">
-     <Card.Img variant="top img-fluid img__card" src={ApiConfig.originalImage(item.poster_path)} />
-     
-     <button className="btn  card__btn">Wtch Now</button>
-     <Card.Body className="card__body">
-       <Card.Title className="card__titile text-light">{item.title}</Card.Title>
-       <Card.Text className="card__overview">
-       {/* {item.overview} */}
-       </Card.Text>
-     </Card.Body>
-   </Card>
-   </Link>
-
-
-
- )
+    return (
+        <Link to={link} className="modern-movie-card">
+            <div className="modern-movie-card__poster">
+                {!imageError ? (
+                    <img 
+                        src={posterUrl}
+                        alt={title}
+                        onError={handleImageError}
+                    />
+                ) : (
+                    <div className="modern-movie-card__placeholder">
+                        <span>{title.charAt(0)}</span>
+                    </div>
+                )}
+                <div className="modern-movie-card__overlay">
+                    <div className="modern-movie-card__rating">
+                        {item.vote_average && (
+                            <span className="rating-star">⭐</span>
+                        )}
+                        {item.vote_average && (
+                            <span>{item.vote_average.toFixed(1)}</span>
+                        )}
+                    </div>
+                    <div className="modern-movie-card__info">
+                        <h3 className="modern-movie-card__title">{title}</h3>
+                        {item.release_date && (
+                            <p className="modern-movie-card__date">
+                                {new Date(item.release_date || item.first_air_date).getFullYear()}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </Link>
+    );
 }
-
 
 export default MovieCard;

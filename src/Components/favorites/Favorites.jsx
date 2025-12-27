@@ -1,63 +1,67 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { GoHeart } from "react-icons/go";
-import ApiConfig from '../../api/api';
-import tmdbApi from '../../api/tmdbApi';
-import { removeFavorite,addFavorite } from '../../store/slice/favorites';
+import { removeFavorite } from '../../store/slice/favorites';
+import MovieCard from '../movieCard/MovieCard';
+import { category } from '../../api/tmdbApi';
+import './Favorites.scss';
+
 const Favorites = () => {
-  // @ts-ignore
-  const favorites = useSelector((state) => state.favorites);
+    const favorites = useSelector((state) => state.favorites);
+    const dispatch = useDispatch();
 
+    const handleRemoveFavorite = (movieId) => {
+        dispatch(removeFavorite(movieId));
+    };
 
-  const dispatch = useDispatch();
-console.log(favorites);
-const handleAddFavorite = (movie) => {
-  dispatch(addFavorite(movie));
-  
-  console.log(dispatch);
- 
-};
-  const handleRemoveFavorite = (movieId) => {
-      dispatch(removeFavorite(movieId))
-      console.log( dispatch(removeFavorite(movieId)));
-  }
+    if (!favorites || favorites.length === 0) {
+        return (
+            <div className="favorites-empty">
+                <div className="container">
+                    <Alert variant="info" className="modern-alert-empty">
+                        <Alert.Heading>No Favorites Yet</Alert.Heading>
+                        <p>Start adding movies to your favorites list!</p>
+                        <Link to="/" className="btn-primary-link">
+                            Browse Movies
+                        </Link>
+                    </Alert>
+                </div>
+            </div>
+        );
+    }
 
-  return (
-  <div className="container " style={{marginTop:"150px"}}>
-      <div className="row">
-        <h1 className="text-light my-4 border shadow px-3 py-2 w-50">
-            My Favorites Movies :
-        </h1>
-    <Row xs={1} md={5} className="g-4 mb-5">
-    {favorites.map((item, index) => (
-        <Col key={item.id}>
-          
-        <Card className="main__card">
-       <Card.Img variant="top img-fluid img__card" src={ApiConfig.originalImage(item.poster_path)} />
-       <div className="m-2 icon___card">
-       <GoHeart onClick={()=>handleRemoveFavorite(item.id)} style={{ fontSize: "33px", color: !item ?'red':'white' }}/>
-       </div>
-     <Link to={'/'+'movie'+'/'+item.id} >
-       <Card.Body className="card__body">
-         <Card.Title className="card__titile text-light">{item.title}</Card.Title>
-         <Card.Text className="card__overview">
-         {item.overview}
-         </Card.Text>
-       </Card.Body>
-
-     </Link>
-     </Card>
-
-    
-   </Col>
-      )
-    )}
-  </Row>
-    </div>
-  </div>
-  );
+    return (
+        <div className="favorites-page">
+            <div className="container">
+                <div className="favorites-header">
+                    <h1 className="favorites-title">
+                        My Favorite Movies
+                        <span className="favorites-count">({favorites.length})</span>
+                    </h1>
+                </div>
+                <div className="favorites-grid">
+                    {favorites.map((item) => (
+                        <div key={item.id} className="favorites-item">
+                            <MovieCard 
+                                category={item.category || category.movie} 
+                                item={item} 
+                            />
+                            <button 
+                                className="favorites-remove-btn"
+                                onClick={() => handleRemoveFavorite(item.id)}
+                                title="Remove from favorites"
+                            >
+                                <GoHeart />
+                                <span>Remove</span>
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default Favorites;

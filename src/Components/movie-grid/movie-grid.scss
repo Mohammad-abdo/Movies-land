@@ -1,46 +1,58 @@
-@use '../../Sass/' as * ;
-
+@use '../../Sass/' as *;
 
 .movie-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 3rem;
+    gap: 2rem;
+    padding: 1rem 0;
 
     @include tablet {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1.5rem;
     }
 
-    &__loadmore {
-        text-align: center;
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
     }
+}
+
+.movie-grid__loadmore {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 2rem 0;
 }
 
 .movie-search {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 
     input {
-        width: 100%;
-        padding-right: 8rem;
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        color: $txt-color;
+        font-size: 1rem;
+
+        &:focus {
+            outline: none;
+            border-color: $main-color;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
     }
 
     button {
-        position: absolute;
-        right: 0;
-        top: 2px;
-
-        @include mobile {
-            right: 1px;
-            top: 1px;
-        }
+        padding: 0.75rem 2rem;
     }
-}
-.small{
-    background: rgba(239, 213, 119, 0.677);
-    color: #ffffff;
-    border: 1px solid rgba(255, 0, 0, 0.422);
-    padding: 6px 14px;
-    border-radius: 7px;
 }

@@ -1,0 +1,109 @@
+@use '../../Sass/' as *;
+
+.cast-section {
+    margin: 4rem 0;
+}
+
+.cast-loading {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $txt-color;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid $main-color;
+    display: inline-block;
+}
+
+.cast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+}
+
+.cast-card {
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        color: inherit;
+    }
+}
+
+.cast-image {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    aspect-ratio: 2/3;
+    background: rgba(255, 255, 255, 0.05);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+}
+
+.cast-info {
+    text-align: center;
+}
+
+.cast-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $txt-color;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.cast-character {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.crew-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+.crew-card {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.crew-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $txt-color;
+    margin-bottom: 0.5rem;
+}
+
+.crew-job {
+    font-size: 0.9rem;
+    color: $main-color;
+    margin: 0;
+}
+

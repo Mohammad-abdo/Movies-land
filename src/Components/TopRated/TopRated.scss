@@ -1,53 +1,118 @@
-.card{
-    position: relative;
-    border-radius: 40px;
-    .img__card{
-        border-radius: 40px;
+@use '../../Sass/' as *;
+
+.rounded__card {
+    padding: 0.5rem;
+    
+    .card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+
+        &:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+            border-color: $main-color;
+
+            .card__btn {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     }
-}
-.rounded__card{
-    border-radius: 40px;
+
+    .img__card {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 2/3;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover .img__card {
+        transform: scale(1.05);
+    }
+
+    .card__body {
+        padding: 1rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        position: relative;
+    }
+
+    .crd__title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: $txt-color;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .over__card {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 }
 
-.card__body{
-    position: absolute;
-    bottom: 0 ;
-    left: 0;
-    height: 70px;
-    background-color: #06060683;
-    width: 100%;
-    transition: all .6s ease-in-out;
+// React Multi Carousel Customization
+.react-multi-carousel-list {
+    padding: 1rem 0;
+}
+
+.react-multi-carousel-track {
+    padding: 0.5rem 0;
+}
+
+.react-multi-carousel-dot-list {
+    margin-top: 2rem;
+
+    .react-multi-carousel-dot button {
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        background: transparent;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
     }
-    .card:hover .card__body{
-        // transform: scaleY(1.5);
-        height: 100%;
+
+    .react-multi-carousel-dot--active button {
+        background: $main-color;
+        border-color: $main-color;
+        width: 30px;
+        border-radius: 6px;
     }
-    .card:hover .crd__title{
-        color: rgb(170, 255, 0) !important;
-        margin-top: 20px;
-       font-weight: bold;
-       box-shadow:  2px 2px 2px #ffffff51;
+}
+
+.react-multi-carousel-arrow {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    transition: all 0.3s ease;
+
+    &::before {
+        color: $txt-color;
+        font-size: 1.2rem;
     }
-    .card__btn{
-        position: absolute;
-        top: 60%;
-        left: 30%;
-        font-size: 16px !important;
-        font-weight: bold !important;
-        transition: all .6s ease-in-out;
-        border: 1px solid #000000;
+
+    &:hover {
+        background: rgba(255, 0, 0, 0.3);
+        border-color: $main-color;
     }
-    .card__btn:hover{
-      background-color: #0000003f  !important;
-      border: 1px solid #ffffff;
-      color: rgb(255, 255, 255) !important;
+
+    &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
     }
-    .over__card{
-        display: none;
-    }
-    .card__body:hover  .over__card{
-        // transform: scaleY(1.5);
-        display: block;
-        color: rgb(255, 166, 0) !important;
-        font-size: 14px !important;
-    }
+}

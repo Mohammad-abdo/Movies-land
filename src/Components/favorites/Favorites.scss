@@ -1,0 +1,164 @@
+@use '../../Sass/' as *;
+
+.favorites-page {
+    min-height: calc(100vh - 80px);
+    padding: 4rem 2rem;
+    margin-top: 80px;
+
+    @include mobile {
+        padding: 3rem 1rem;
+        margin-top: 60px;
+    }
+}
+
+.favorites-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid $main-color;
+}
+
+.favorites-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $txt-color;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    @include mobile {
+        font-size: 2rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.favorites-count {
+    font-size: 1.5rem;
+    color: $main-color;
+    font-weight: 600;
+
+    @include mobile {
+        font-size: 1.2rem;
+    }
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+
+    @include tablet {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1.5rem;
+    }
+
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+}
+
+.favorites-item {
+    position: relative;
+
+    &:hover .favorites-remove-btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.favorites-remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border: 2px solid $main-color;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: $main-color;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+
+    svg {
+        font-size: 1.2rem;
+    }
+
+    &:hover {
+        background: $main-color;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+    }
+
+    @include mobile {
+        opacity: 1;
+        transform: translateY(0);
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+.favorites-empty {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    margin-top: 80px;
+
+    @include mobile {
+        padding: 3rem 1rem;
+        margin-top: 60px;
+    }
+}
+
+.modern-alert-empty {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 500px;
+
+    .alert-heading {
+        color: $txt-color;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+}
+
+.btn-primary-link {
+    background: $main-color;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: darken($main-color, 10%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+        color: white;
+    }
+}
+

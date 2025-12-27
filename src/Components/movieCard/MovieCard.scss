@@ -1,43 +1,131 @@
-// @use '../../Sass/' as *;
+@use '../../Sass/' as *;
 
-// .movie-card{
-//     position: relative;
-//     background-position: top;
-//     background-repeat: no-repeat;
-//     background-size: cover;
-//     padding-top: 160%;
-//     margin-bottom: 1rem;
-// .card__info{
-//     position: absolute;
-//     bottom: 0;
-//     background: #00000036;
-//     width: 100%;
-//     height: 80px;
-// }
-//     .btn{
-//         position: absolute;
-//         top: 50%;
-//         left: 50%;
-//         transform: translate(-50%,-50%)scale(0);
-//         transition: transform .3s ease,box-shadow .3s ease;
-//     }
-//     &::before{
-//         content: '';
-//         position: absolute;
-//         top: 0;
-//         left: 0;
-//         background-color: $black;
-//         opacity: 0;
-//         transition: opacity .3s ease;
-//         border-radius:$border-radius ;
-//     }
-//     @media (hover:hover){
-//         &:hover::before{
-//             opacity: .8;
-//         }
-//         &:hover .btn{
-//             transform: translate(-50%,-50%)scale(1);
+.modern-movie-card {
+    text-decoration: none;
+    display: block;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 100%;
 
-//         }
-//     }
-// }
+    &:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+
+        .modern-movie-card__overlay {
+            opacity: 1;
+        }
+
+        .modern-movie-card__poster img {
+            transform: scale(1.1);
+        }
+    }
+
+    &__poster {
+        position: relative;
+        width: 100%;
+        padding-top: 150%; // 2:3 aspect ratio
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.5);
+
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+    }
+
+    &__placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        span {
+            font-size: 4rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.5);
+        }
+    }
+
+    &__overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent);
+        padding: 1.5rem 1rem 1rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    &__rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        color: $txt-color;
+        font-size: 0.9rem;
+        font-weight: 600;
+
+        .rating-star {
+            font-size: 1rem;
+        }
+    }
+
+    &__info {
+        color: $txt-color;
+    }
+
+    &__title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        color: $txt-color;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    &__date {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+    }
+}
+
+// Alternative style: Show info on card always
+.modern-movie-card.always-visible {
+    .modern-movie-card__overlay {
+        opacity: 1;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    }
+}
+
+@include mobile {
+    .modern-movie-card {
+        &:hover {
+            transform: none;
+        }
+
+        &__overlay {
+            opacity: 1;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        }
+    }
+}

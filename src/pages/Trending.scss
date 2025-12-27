@@ -1,0 +1,70 @@
+@use '../Sass/' as *;
+
+.trending-page {
+    min-height: 100vh;
+    background: $body-bg;
+}
+
+.trending-loading,
+.trending-error {
+    min-height: 100vh;
+    background: $body-bg;
+}
+
+.trending-tabs {
+    padding: 4rem 2rem;
+
+    @include mobile {
+        padding: 3rem 1rem;
+    }
+}
+
+.trending-tabs-custom {
+    .nav-tabs {
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 3rem;
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: transparent;
+
+            &:hover {
+                color: $main-color;
+                border-bottom-color: rgba(255, 0, 0, 0.3);
+            }
+
+            &.active {
+                color: $main-color;
+                border-bottom-color: $main-color;
+                background: transparent;
+            }
+        }
+    }
+
+    .tab-content {
+        margin-top: 2rem;
+    }
+}
+
+.trending-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+
+    @include tablet {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1.5rem;
+    }
+
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+}
+

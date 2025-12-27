@@ -1,121 +1,237 @@
-
 import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { Spinner, Alert, Badge } from "react-bootstrap";
 import ApiConfig from "../api/api";
 import tmdbApi from "../api/tmdbApi";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import { Card } from "react-bootstrap";
 import TopRated from "../Components/TopRated/TopRated";
-import MovieGrid from "../Components/movie-grid/MovieGrid";
+import { OutlineButton } from "../Components/Button/Button";
+import CastSection from "../Components/CastSection/CastSection";
+import Recommendations from "../Components/Recommendations/Recommendations";
+import WatchProviders from "../Components/WatchProviders/WatchProviders";
+import './Details.scss';
 
+const Details = () => {
+    const { category, id } = useParams();
+    const [item, setItem] = useState(null);
+    const [video, setVideo] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-const Details=(props,{favorite})=>{
-    const {category,id}=useParams();
-    const [item,setItem]=useState({})
-    const [video,setVideo]=useState({})
-    const obg={
-        id:'',
-        title:'',
-        imgUrl:""
-    }
-   const arr=[]
-    useEffect(()=>{
-        const getDetails= async (props)=>{
-            const params ={}
-            const response = await tmdbApi.details(category ,id ,params)
-            const data = await axios
-      .get(`https://api.themoviedb.org/3/movie/${id}/videos`, {
-        params: {
-          api_key: '9fd4f82abd9873f00e717892f1f9ea97',
-        },
-      })
-            setItem(response)
-            setVideo(data)
-            console.log(response);
-           
-            window.scrollTo(0,0)
+    useEffect(() => {
+        const getDetails = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                
+                const params = {};
+                const [detailsResponse, videoResponse] = await Promise.all([
+                    tmdbApi.details(category, id, params),
+                    tmdbApi.getVideos(category, id).catch(() => null)
+                ]);
+
+                setItem(detailsResponse);
+                if (videoResponse?.results && videoResponse.results.length > 0) {
+                    const trailer = videoResponse.results.find(
+                        v => v.site === 'YouTube' && v.type === 'Trailer'
+                    ) || videoResponse.results.find(
+                        v => v.site === 'YouTube'
+                    );
+                    setVideo(trailer);
+                }
+                
+                window.scrollTo(0, 0);
+            } catch (err) {
+                setError(err.message || 'Failed to load details');
+                console.error('Error fetching details:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id && category) {
+            getDetails();
         }
-        
-    
-        getDetails()
-       
+    }, [category, id]);
 
-    },[category ,id])   
-    console.log(video);
-    console.log(item);
-   arr.push(item)  
- 
-    // localStorage.setItem(item.id,JSON.stringify(item));
-    // @ts-ignore
-    // var movie = JSON.parse(localStorage.getItem(item.id));
-    localStorage.setItem("array",JSON.stringify(arr.push(item) ));
+    if (loading) {
+        return (
+            <div className="details-loading">
+                <Spinner animation="border" variant="danger" size="lg" />
+            </div>
+        );
+    }
 
-    var array = JSON.parse( localStorage.getItem("array"));
-    // console.log(array);
-  
-  
-    console.log(arr.length);
- 
-   console.log(arr);
+    if (error || !item) {
+        return (
+            <div className="container details-error">
+                <Alert variant="danger" className="modern-alert">
+                    <Alert.Heading>Error Loading Content</Alert.Heading>
+                    <p>{error || 'Content not found'}</p>
+                    <Link to="/">
+                        <OutlineButton>Go to Home</OutlineButton>
+                    </Link>
+                </Alert>
+            </div>
+        );
+    }
 
-return (
-    <>
-    <div className=" container my-4">
-       <div className="row">
-        <div className="col-4 my-5 p-5">
-        <Card className="main__card">
+    const title = item.title || item.name;
+    const releaseDate = item.release_date || item.first_air_date;
+    const backdropUrl = ApiConfig.backdropImage(item.backdrop_path);
+    const posterUrl = ApiConfig.w500Image(item.poster_path);
+    const runtime = item.runtime || (item.episode_run_time && item.episode_run_time[0]);
 
-            <Card.Img variant="top img-fluid img__card" src={ApiConfig.originalImage(item.poster_path)} />
-            
-            <button className="btn  card__btn">Wtch Now</button>
-            <Card.Body className="card__body">
-              <Card.Title className="card__titile text-light">{item.title}</Card.Title>
-              <Card.Text className="card__overview">
-              {item.overview}
-              </Card.Text>
-            </Card.Body>
-          </Card>
+    return (
+        <div className="details-page">
+            {/* Hero Section with Backdrop */}
+            <div 
+                className="details-hero"
+                style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url(${backdropUrl})` }}
+            >
+                <div className="container">
+                    <div className="details-hero__content">
+                        <div className="details-hero__poster">
+                            <img 
+                                src={posterUrl}
+                                alt={title}
+                                onError={(e) => {
+                                    e.target.src = 'https://via.placeholder.com/500x750?text=No+Image';
+                                }}
+                            />
+                        </div>
+                        <div className="details-hero__info">
+                            <h1 className="details-title">{title}</h1>
+                            
+                            <div className="details-meta">
+                                {item.vote_average && (
+                                    <div className="details-rating">
+                                        <span className="rating-star">⭐</span>
+                                        <span className="rating-value">{item.vote_average.toFixed(1)}</span>
+                                        <span className="rating-total">/10</span>
+                                    </div>
+                                )}
+                                {releaseDate && (
+                                    <span className="details-year">{new Date(releaseDate).getFullYear()}</span>
+                                )}
+                                {runtime && (
+                                    <span className="details-runtime">{runtime} min</span>
+                                )}
+                                {item.genres && item.genres.length > 0 && (
+                                    <div className="details-genres">
+                                        {item.genres.map((genre) => (
+                                            <Badge key={genre.id} bg="danger" className="genre-badge">
+                                                {genre.name}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {item.overview && (
+                                <p className="details-overview">{item.overview}</p>
+                            )}
+
+                            <div className="details-actions">
+                                <Link to={`/${category}/${id}/watch`}>
+                                    <button className="btn-primary">
+                                        ▶ Watch Now
+                                    </button>
+                                </Link>
+                                <button className="btn-secondary">
+                                    + Add to Favorites
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="container details-content">
+                {/* Trailer Section */}
+                {video && (
+                    <div className="details-section">
+                        <h2 className="section-title">Trailer</h2>
+                        <div className="details-trailer">
+                            <div className="ratio ratio-16x9">
+                                <iframe
+                                    title="Movie Trailer"
+                                    src={`https://www.youtube.com/embed/${video.key}`}
+                                    allowFullScreen
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Additional Info */}
+                <div className="details-section">
+                    <h2 className="section-title">More Information</h2>
+                    <div className="details-info-grid">
+                        {item.status && (
+                            <div className="info-item">
+                                <strong>Status:</strong>
+                                <span>{item.status}</span>
+                            </div>
+                        )}
+                        {item.original_language && (
+                            <div className="info-item">
+                                <strong>Language:</strong>
+                                <span>{item.original_language.toUpperCase()}</span>
+                            </div>
+                        )}
+                        {item.budget && item.budget > 0 && (
+                            <div className="info-item">
+                                <strong>Budget:</strong>
+                                <span>${item.budget.toLocaleString()}</span>
+                            </div>
+                        )}
+                        {item.revenue && item.revenue > 0 && (
+                            <div className="info-item">
+                                <strong>Revenue:</strong>
+                                <span>${item.revenue.toLocaleString()}</span>
+                            </div>
+                        )}
+                        {item.number_of_seasons && (
+                            <div className="info-item">
+                                <strong>Seasons:</strong>
+                                <span>{item.number_of_seasons}</span>
+                            </div>
+                        )}
+                        {item.number_of_episodes && (
+                            <div className="info-item">
+                                <strong>Episodes:</strong>
+                                <span>{item.number_of_episodes}</span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Watch Providers */}
+                <WatchProviders category={category} id={id} />
+
+                {/* Cast & Crew */}
+                <CastSection category={category} id={id} />
+
+                {/* Recommendations */}
+                <Recommendations category={category} id={id} />
+
+                {/* Similar Content */}
+                <div className="details-section">
+                    <div className="section-header">
+                        <h2 className="section-title">Similar Content</h2>
+                        <Link to={`/${category}`}>
+                            <OutlineButton className="modern-btn-outline">
+                                View All
+                            </OutlineButton>
+                        </Link>
+                    </div>
+                    <TopRated />
+                </div>
+            </div>
         </div>
-        <div className="col-8 my-5 p-5">
-            <div className="my-4"><h1 className="text-danger">{item.title}</h1></div>
- <p className="text-light">{item.overview}</p>
- <div className="my3"><h4 className="text-light"> Release Date : {item.release_date}</h4></div>
- <div className="my-5">
-    <img src={ApiConfig.originalImage(item.backdrop_path)}  className="img-fluid  "
-    style={{width:"200px",height:"200px",borderRadius:"30px"}}
-    alt="" />
- </div>
-        </div>
-       
-       
-       </div>
-    
-    </div>
-    <div className="container">
-    <iframe
-          title="Movie Trailer"
-          width="560"
-          height="315"
-          src={`https://www.youtube.com/watch?v=${item.id}`}
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
-    </div>
-    <div className="container">
-        <div className="my-3">
-        <div className="section my-5 d-flex align items-center justify-content-between"><h2 className="text-light">Trending Tv</h2><a href="/movie"><button class="OutlineButton small btn rounded-pill ">View More</button></a></div>
-        </div>
-        <TopRated className="my-3"/>
-    </div>
-    <div className="container">
-        <div className="my-3">
-        <div className="section my-5 d-flex align items-center justify-content-between"><h2 className="text-light">Trending Tv</h2><a href="/movie"><button class="OutlineButton small btn rounded-pill ">View More</button></a></div>
-        </div>
-     
-        <MovieGrid/>
-    </div>
-    </>
-)
+    );
 }
 
 export default Details;

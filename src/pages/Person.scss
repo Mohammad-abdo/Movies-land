@@ -1,0 +1,145 @@
+@use '../Sass/' as *;
+
+.person-page {
+    min-height: 100vh;
+    background: $body-bg;
+}
+
+.person-content {
+    padding: 4rem 2rem;
+
+    @include mobile {
+        padding: 3rem 1rem;
+    }
+}
+
+.person-header {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 4rem;
+
+    @include tablet {
+        flex-direction: column;
+        gap: 2rem;
+    }
+}
+
+.person-poster {
+    flex-shrink: 0;
+    width: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    @include tablet {
+        width: 250px;
+        margin: 0 auto;
+    }
+
+    @include mobile {
+        width: 200px;
+    }
+}
+
+.person-info {
+    flex: 1;
+    color: $txt-color;
+}
+
+.person-name {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: $txt-color;
+
+    @include mobile {
+        font-size: 2rem;
+    }
+}
+
+.person-department {
+    margin-bottom: 2rem;
+}
+
+.person-detail {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+
+    strong {
+        color: $main-color;
+        margin-right: 0.5rem;
+    }
+}
+
+.person-biography {
+    margin-top: 2rem;
+
+    h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: $main-color;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.9);
+    }
+}
+
+.person-credits {
+    margin-top: 4rem;
+}
+
+.person-tabs {
+    .nav-tabs {
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 3rem;
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+
+            &:hover {
+                color: $main-color;
+                border-bottom-color: rgba(255, 0, 0, 0.3);
+            }
+
+            &.active {
+                color: $main-color;
+                border-bottom-color: $main-color;
+                background: transparent;
+            }
+        }
+    }
+}
+
+.credits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+
+    @include tablet {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1.5rem;
+    }
+
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+}
+

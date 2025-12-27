@@ -1,0 +1,44 @@
+@use '../../Sass/' as *;
+
+.recommendations-section {
+    margin: 4rem 0;
+}
+
+.recommendations-loading {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $txt-color;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid $main-color;
+    display: inline-block;
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+
+    @include tablet {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1.5rem;
+    }
+
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+}
+

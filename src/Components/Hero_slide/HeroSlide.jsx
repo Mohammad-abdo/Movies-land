@@ -1,79 +1,100 @@
 import React, { useEffect, useState } from "react";
-import tmdbApi,{category, movieType, tvType} from '../../api/tmdbApi';
+import tmdbApi, { tvType } from '../../api/tmdbApi';
 import ApiConfig from "../../api/api";
-import './HeroSlide.scss'
-import Button,{OutlineButton} from '../Button/Button'
-import { Swiper, SwiperSlide } from 'swiper/react';
+import './HeroSlide.scss';
+import Button from '../Button/Button';
+import { Link } from "react-router-dom";
 import Carousel from 'react-bootstrap/Carousel';
-// @ts-ignore
-// import ExampleCarouselImage from 'components/ExampleCarouselImage';
-const HeroSlide=()=>{
-    // swiperCore.use([Autopaly]);
-  
-    const [movieItems,setMoviItems]=useState([])
-    useEffect(()=>{
-        const getMovies=async ()=>{
-            const param ={page:1}
+import { Spinner } from 'react-bootstrap';
+
+const HeroSlide = () => {
+    const [movieItems, setMovieItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const getMovies = async () => {
             try {
-                const response= await tmdbApi.getMoviesList(tvType.popular,{param})
-                // @ts-ignore
-                setMoviItems(response.results.slice(3,10))
-            
-            } catch (error) {
-                console.log(error);
+                setLoading(true);
+                const param = { page: 1 };
+                const response = await tmdbApi.getMoviesList(tvType.popular, { param });
+                setMovieItems(response.results ? response.results.slice(3, 10) : []);
+            } catch (err) {
+                setError(err.message);
+                console.error('Error fetching hero slide movies:', err);
+            } finally {
+                setLoading(false);
             }
-        }
-        getMovies()
-    },[])
-return (
-    <div className="hero-slide item_card">
-     <Carousel >
-      {movieItems.map((item, index) => (
-        <Carousel.Item key={index} style={{position:'relative'}} className="">
-          <img className="d-block w-100 " src={ApiConfig.originalImage(item.backdrop_path)}/>
-          <Carousel.Caption>
-          <div className="container ">
-        <div className="row info__content__slide d-flex justify-content-between">
-            <div className="col-7 d-flex justify-content-evenly flex-column">
-         <div className="d-flex ">
-         <h2 className="title " style={{fontSize:'60px',fontWeight:'bold'}}>{item.title}</h2>
-         </div>
-    <div className="overview d-flex" style={{fontSize:'28px',fontWeight:'500'}}>{item.overview}</div>
-    <div className="my-2 d-flex ">
-    <Button className=" mx-3 btn ">
-        Watch now
-        </Button>
-        <button className="border py-2 px-4 btn_outline rounded-pill" > Watch triler</button>
-    </div>
+        };
+        getMovies();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '500px' }}>
+                <Spinner animation="border" variant="primary" size="lg" />
             </div>
-         
-            <div className="col-4 my-3 mx-3 img__slide__card " style={{backgroundImage:`url(${ApiConfig.originalImage(item.backdrop_path)})`}}>
-                  {/* <img src={ApiConfig.originalImage(item.backdrop_path)} alt="" className="img__slide img-fluid" /> */}
-            </div>
+        );
+    }
+
+    if (error || !movieItems || movieItems.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="hero-slide item_card">
+            <Carousel>
+                {movieItems.map((item, index) => {
+                    const backdropUrl = ApiConfig.backdropImage(item.backdrop_path);
+                    const title = item.title || item.name;
+
+                    return (
+                        <Carousel.Item key={item.id || index} style={{ position: 'relative' }}>
+                            <img 
+                                className="d-block w-100" 
+                                src={backdropUrl}
+                                alt={title}
+                                onError={(e) => {
+                                    e.target.src = 'https://via.placeholder.com/1920x1080?text=No+Image';
+                                }}
+                            />
+                            <Carousel.Caption>
+                                <div className="container">
+                                    <div className="row info__content__slide d-flex justify-content-between">
+                                        <div className="col-12 col-md-7 d-flex justify-content-evenly flex-column">
+                                            <div className="d-flex">
+                                                <h2 className="title" style={{ fontSize: '60px', fontWeight: 'bold' }}>
+                                                    {title}
+                                                </h2>
+                                            </div>
+                                            {item.overview && (
+                                                <div className="overview d-flex" style={{ fontSize: '28px', fontWeight: '500' }}>
+                                                    {item.overview.substring(0, 200)}...
+                                                </div>
+                                            )}
+                                            <div className="my-2 d-flex">
+                                                <Link to={`/movie/${item.id}`}>
+                                                    <Button className="mx-3 btn">
+                                                        Watch Now
+                                                    </Button>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                        {backdropUrl && (
+                                            <div 
+                                                className="col-4 my-3 mx-3 img__slide__card d-none d-md-block"
+                                                style={{ backgroundImage: `url(${backdropUrl})` }}
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                            </Carousel.Caption>
+                        </Carousel.Item>
+                    );
+                })}
+            </Carousel>
         </div>
-     </div>
-          </Carousel.Caption>
-        </Carousel.Item>
-      ))}
-    </Carousel>
-    
-    </div>
-)
-}
-const HeroSliderItem= props=>{
-   
-    const item =props.item
-    const background= ApiConfig.originalImage(item.backdrop_path ?item.backdrop_path :item.poster_path )
-     return (
-        <div
-        className={`hero-slide__item ${props.className}`}
-        style={{backgroundImage:`url(${background})`}}
-        >
-            {item.title}
-        </div>
-     )
+    );
 }
 
 export default HeroSlide;
-
-

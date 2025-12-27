@@ -1,29 +1,92 @@
-@use '../../Sass//variables' as * ;
+@use '../../Sass/' as *;
 
-
-.page-header {
-    padding: $header-height 0 2rem;
-    text-align: center;
-    margin-bottom: 2rem;
-
+.modern-page-header {
     position: relative;
+    padding: 8rem 0 4rem;
+    margin-top: 80px;
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(0, 0, 0, 0.9));
+    text-align: center;
+    overflow: hidden;
 
-    background-position: top;
-    background-size: cover;
-    background-repeat: no-repeat;
-
-    h2 {
-        position: relative;
-        z-index: 99;
+    @include mobile {
+        padding: 6rem 0 3rem;
+        margin-top: 60px;
     }
 
-    &::after {
-        content: "";
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 0, 0, 0.1) 0%, transparent 50%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+
+    &__overlay {
         position: absolute;
         bottom: 0;
         left: 0;
-        width: 100%;
+        right: 0;
         height: 100px;
-        background-image: linear-gradient(to top, $body-bg, rgba($black, 0));
+        background: linear-gradient(to top, $body-bg, transparent);
+        z-index: 1;
+    }
+
+    &__content {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    &__title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: $txt-color;
+        margin: 0;
+        text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.8);
+        letter-spacing: -1px;
+        position: relative;
+        display: inline-block;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: $main-color;
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        @include tablet {
+            font-size: 2.5rem;
+        }
+
+        @include mobile {
+            font-size: 2rem;
+
+            &::after {
+                width: 60px;
+                height: 3px;
+            }
+        }
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.8;
     }
 }
