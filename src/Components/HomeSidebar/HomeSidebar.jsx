@@ -13,49 +13,49 @@ const HomeSidebar = () => {
 
     const categories = [
         {
-            name: 'Movies',
+            name: 'أفلام',
             icon: <FaFilm />,
             path: '/movie',
             subcategories: [
-                { name: 'Popular Movies', path: '/movie?sort_by=popularity.desc' },
-                { name: 'Top Rated', path: '/movie?sort_by=vote_average.desc' },
-                { name: 'Upcoming', path: '/movie?sort_by=release_date.desc' },
-                { name: 'Now Playing', path: '/movie?sort_by=popularity.desc&vote_average.gte=7' },
-                { name: 'Trending', path: '/trending?type=movie' },
+                { name: 'أفلام شائعة', path: '/movie?sort_by=popularity.desc' },
+                { name: 'الأعلى تقييماً', path: '/movie?sort_by=vote_average.desc' },
+                { name: 'قريباً', path: '/movie?sort_by=release_date.desc' },
+                { name: 'يعرض الآن', path: '/movie?sort_by=popularity.desc&vote_average.gte=7' },
+                { name: 'رائجة', path: '/trending?type=movie' },
             ]
         },
         {
-            name: 'TV Series',
+            name: 'مسلسلات',
             icon: <FaTv />,
             path: '/tv',
             subcategories: [
-                { name: 'Popular TV Shows', path: '/tv?sort_by=popularity.desc' },
-                { name: 'Top Rated', path: '/tv?sort_by=vote_average.desc' },
-                { name: 'On The Air', path: '/tv?sort_by=popularity.desc' },
-                { name: 'Airing Today', path: '/tv?sort_by=popularity.desc' },
+                { name: 'مسلسلات شائعة', path: '/tv?sort_by=popularity.desc' },
+                { name: 'الأعلى تقييماً', path: '/tv?sort_by=vote_average.desc' },
+                { name: 'على الهواء', path: '/tv?sort_by=popularity.desc' },
+                { name: 'تعرض اليوم', path: '/tv?sort_by=popularity.desc' },
             ]
         },
         {
-            name: 'Anime & Manga',
+            name: 'أنمي ومانجا',
             icon: <FaBookOpen />,
             path: '/anime',
             subcategories: [
-                { name: 'Popular Anime', path: '/anime?sort_by=popularity.desc' },
-                { name: 'Top Rated Anime', path: '/anime?sort_by=vote_average.desc' },
-                { name: 'Latest Releases', path: '/anime?sort_by=release_date.desc' },
+                { name: 'أنمي شائع', path: '/anime?sort_by=popularity.desc' },
+                { name: 'أعلى تقييماً', path: '/anime?sort_by=vote_average.desc' },
+                { name: 'أحدث الإصدارات', path: '/anime?sort_by=release_date.desc' },
             ]
         }
     ];
 
     const quickLinks = [
-        { name: 'Trending Now', icon: <FaFire />, path: '/trending' },
-        { name: 'My Favorites', icon: <FaHeart />, path: '/Favorites' },
-        { name: 'Search', icon: <FaSearch />, path: '/search' },
+        { name: 'رائجة الآن', icon: <FaFire />, path: '/trending' },
+        { name: 'مفضلاتي', icon: <FaHeart />, path: '/Favorites' },
+        { name: 'بحث', icon: <FaSearch />, path: '/search' },
     ];
 
     const browseLinks = [
-        { name: 'Collections', path: '/collections' },
-        { name: 'Adult Content (18+)', path: '/adult' },
+        { name: 'سلاسل الأفلام', path: '/collections' },
+        { name: 'للكبار (18+)', path: '/adult' },
     ];
 
     const isActive = (path) => {
@@ -67,7 +67,7 @@ const HomeSidebar = () => {
             <div className="home-sidebar__content">
                 {/* Quick Links Section */}
                 <div className="sidebar-section">
-                    <h3 className="sidebar-section__title">Quick Links</h3>
+                    <h3 className="sidebar-section__title">روابط سريعة</h3>
                     <ul className="sidebar-links">
                         {quickLinks.map((link, index) => (
                             <li key={index}>
@@ -85,7 +85,7 @@ const HomeSidebar = () => {
 
                 {/* Categories with Dropdowns */}
                 <div className="sidebar-section">
-                    <h3 className="sidebar-section__title">Browse by Category</h3>
+                    <h3 className="sidebar-section__title">تصفح حسب الفئة</h3>
                     <ul className="sidebar-categories">
                         {categories.map((category, index) => (
                             <li key={index} className="sidebar-category">
@@ -128,7 +128,7 @@ const HomeSidebar = () => {
 
                 {/* Browse More Section */}
                 <div className="sidebar-section">
-                    <h3 className="sidebar-section__title">Browse More</h3>
+                    <h3 className="sidebar-section__title">تصفح المزيد</h3>
                     <ul className="sidebar-links">
                         {browseLinks.map((link, index) => (
                             <li key={index}>
@@ -146,20 +146,20 @@ const HomeSidebar = () => {
                 {/* Filters Section */}
                 <div className="sidebar-section">
                     <h3 className="sidebar-section__title">
-                        <FaStar className="sidebar-section__icon" /> Quick Filters
+                        <FaStar className="sidebar-section__icon" /> فلاتر سريعة
                     </h3>
                     <div className="sidebar-filters">
                         <Link to="/movie?vote_average.gte=7" className="sidebar-filter-chip">
-                            <FaStar /> High Rated (7+)
+                            <FaStar /> تقييم عالي (7+)
                         </Link>
                         <Link to="/movie?sort_by=release_date.desc" className="sidebar-filter-chip">
-                            <FaCalendar /> Latest Releases
+                            <FaCalendar /> أحدث الإصدارات
                         </Link>
                         <Link to="/trending" className="sidebar-filter-chip">
-                            <FaFire /> Trending
+                            <FaFire /> رائجة
                         </Link>
                         <Link to="/movie?sort_by=vote_average.desc" className="sidebar-filter-chip">
-                            <FaStar /> Top Rated
+                            <FaStar /> الأعلى تقييماً
                         </Link>
                     </div>
                 </div>

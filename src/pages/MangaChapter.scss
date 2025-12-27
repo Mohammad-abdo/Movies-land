@@ -1,0 +1,119 @@
+@use '../Sass/' as *;
+
+.manga-chapter-reader {
+    padding-top: 60px;
+    min-height: 100vh;
+    background: $body-bg;
+    padding-bottom: 3rem;
+}
+
+.chapter-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    
+    .back-btn {
+        color: $txt-color;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            background: rgba($white, 0.1);
+            color: $main-color;
+            text-decoration: none;
+        }
+    }
+    
+    .page-counter {
+        color: $txt-color;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    
+    .chapter-controls {
+        display: flex;
+        gap: 0.5rem;
+        
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            
+            &:disabled {
+                opacity: 0.5;
+            }
+        }
+    }
+}
+
+.manga-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    margin: 2rem 0;
+    background: rgba($black, 0.3);
+    border-radius: $border-radius;
+    padding: 2rem;
+}
+
+.manga-page-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: $border-radius;
+    box-shadow: 0 10px 40px rgba($black, 0.8);
+    display: block;
+    margin: 0 auto;
+}
+
+.chapter-navigation-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    margin-top: 2rem;
+    border-top: 1px solid rgba($white, 0.1);
+    
+    .page-indicator {
+        color: $txt-color;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    
+    button {
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+    }
+}
+
+.manga-chapter-loading,
+.manga-chapter-error {
+    padding-top: 60px;
+    min-height: 100vh;
+    background: $body-bg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// Keyboard navigation hint
+.manga-chapter-reader::before {
+    content: attr(data-hint);
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba($black, 0.8);
+    color: rgba($txt-color, 0.7);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    z-index: 100;
+    display: none;
+}
+

@@ -3,7 +3,12 @@
 .home-page {
     background: $body-bg;
     min-height: 100vh;
-    padding-top: $header-height;
+    padding-top: 60px; // Match compact header height
+    padding-bottom: 1rem;
+    
+    @include mobile {
+        padding-bottom: 5rem; // Extra space for mobile nav
+    }
 
     &__container {
         padding: 0;
@@ -39,8 +44,14 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    @include mobile {
+    @include tablet {
         padding: 3rem 0;
+        margin-bottom: 1.5rem;
+    }
+
+    @include mobile {
+        padding: 2rem 0;
+        margin-bottom: 1.5rem;
     }
 }
 

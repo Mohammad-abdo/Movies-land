@@ -1,8 +1,8 @@
 @use '../Sass/' as *;
 
 .catalog-page {
-    padding-top: $header-height;
-    min-height: calc(100vh - #{$header-height} - 100px);
+    padding-top: 60px; // Match compact header height
+    min-height: calc(100vh - 60px - 100px);
 
     .catalog-controls {
         padding: 1rem 2rem;

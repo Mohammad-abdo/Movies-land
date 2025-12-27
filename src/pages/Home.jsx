@@ -9,9 +9,12 @@ import AnimeCarousel from "../Components/AnimeCarousel/AnimeCarousel";
 import NowPlaying from '../Components/NowPlaying/NowPlaying';
 import BestMoviesSlider from '../Components/BestMoviesSlider/BestMoviesSlider';
 import HomeSidebar from '../Components/HomeSidebar/HomeSidebar';
+import TrendingCarousel from '../Components/TrendingCarousel/TrendingCarousel';
+import { useLanguage } from '../contexts/LanguageContext';
 import './Home.scss';
 
 const Home = () => {
+    const { t } = useLanguage();
     return (
         <div className="home-page">
             <Container fluid className="home-page__container">
@@ -26,18 +29,39 @@ const Home = () => {
                         {/* Best Movies Slider */}
                         <BestMoviesSlider />
                         
+                        {/* Trending Today Section */}
+                        <section className="home-section">
+                            <div className="section-header">
+                                <h2 className="section-title">{t('home.trendingToday')}</h2>
+                                <Link to="/trending">
+                                    <OutlineButton className="section-link-btn">
+                                        {t('home.viewMore')} →
+                                    </OutlineButton>
+                                </Link>
+                            </div>
+                            <TrendingCarousel mediaType="all" />
+                        </section>
+                        
                         {/* Now Playing Section */}
                         <section className="home-section">
+                            <div className="section-header">
+                                <h2 className="section-title">{t('home.nowPlaying')}</h2>
+                                <Link to="/movie?sort=now_playing">
+                                    <OutlineButton className="section-link-btn">
+                                        {t('home.viewMore')} →
+                                    </OutlineButton>
+                                </Link>
+                            </div>
                             <NowPlaying />
                         </section>
 
                         {/* Trending TV Series Section */}
                         <section className="home-section">
                             <div className="section-header">
-                                <h2 className="section-title">Trending TV Series</h2>
+                                <h2 className="section-title">{t('home.trendingTV')}</h2>
                                 <Link to="/tv">
                                     <OutlineButton className="section-link-btn">
-                                        View More →
+                                        {t('home.viewMore')} →
                                     </OutlineButton>
                                 </Link>
                             </div>
@@ -47,10 +71,10 @@ const Home = () => {
                         {/* Top Rated Movies Section */}
                         <section className="home-section">
                             <div className="section-header">
-                                <h2 className="section-title">Top Rated Movies</h2>
+                                <h2 className="section-title">{t('home.topRated')}</h2>
                                 <Link to="/movie">
                                     <OutlineButton className="section-link-btn">
-                                        View More →
+                                        {t('home.viewMore')} →
                                     </OutlineButton>
                                 </Link>
                             </div>
@@ -60,10 +84,10 @@ const Home = () => {
                         {/* Popular Movies Section */}
                         <section className="home-section">
                             <div className="section-header">
-                                <h2 className="section-title">Popular Movies</h2>
+                                <h2 className="section-title">{t('home.popularMovies')}</h2>
                                 <Link to="/movie">
                                     <OutlineButton className="section-link-btn">
-                                        View More →
+                                        {t('home.viewMore')} →
                                     </OutlineButton>
                                 </Link>
                             </div>
@@ -73,10 +97,10 @@ const Home = () => {
                         {/* Anime & Manga Section */}
                         <section className="home-section">
                             <div className="section-header">
-                                <h2 className="section-title">Anime & Manga</h2>
+                                <h2 className="section-title">{t('home.anime')}</h2>
                                 <Link to="/anime">
                                     <OutlineButton className="section-link-btn">
-                                        View More →
+                                        {t('home.viewMore')} →
                                     </OutlineButton>
                                 </Link>
                             </div>
@@ -86,16 +110,16 @@ const Home = () => {
                         {/* Collections Section */}
                         <section className="home-section">
                             <div className="section-header">
-                                <h2 className="section-title">Movie Collections</h2>
+                                <h2 className="section-title">{t('home.collections')}</h2>
                                 <Link to="/collections">
                                     <OutlineButton className="section-link-btn">
-                                        View All Collections →
+                                        {t('home.viewAllCollections')} →
                                     </OutlineButton>
                                 </Link>
                             </div>
                             <div className="collections-preview">
                                 <p className="text-light text-center">
-                                    Discover amazing movie collections and franchises
+                                    اكتشف سلاسل الأفلام والعروض الرائعة
                                 </p>
                             </div>
                         </section>

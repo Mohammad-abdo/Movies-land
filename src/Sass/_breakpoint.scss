@@ -10,3 +10,8 @@
         @content;
     }
 }
+@mixin desktop{
+    @media only screen and (min-width: $tablet-width + 1px){
+        @content;
+    }
+}

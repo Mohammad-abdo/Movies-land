@@ -70,7 +70,7 @@ const Collections = () => {
     if (loading) {
         return (
             <div className="collections-loading">
-                <PageHeader>Movie Collections</PageHeader>
+                <PageHeader>سلاسل الأفلام</PageHeader>
                 <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
                     <Spinner animation="border" variant="danger" size="lg" />
                 </div>
@@ -81,7 +81,7 @@ const Collections = () => {
     if (error) {
         return (
             <div className="collections-error">
-                <PageHeader>Movie Collections</PageHeader>
+                <PageHeader>سلاسل الأفلام</PageHeader>
                 <div className="container my-5">
                     <Alert variant="danger">
                         <Alert.Heading>Error</Alert.Heading>
@@ -94,7 +94,7 @@ const Collections = () => {
 
     return (
         <div className="collections-page">
-            <PageHeader>Movie Collections</PageHeader>
+            <PageHeader>سلاسل الأفلام</PageHeader>
             <div className="container collections-container">
                 <div className="collections-grid">
                     {collections.map((collection) => (
@@ -126,7 +126,7 @@ const Collections = () => {
                                         )}
                                         {collection.parts && (
                                             <div className="collection-count">
-                                                {collection.parts.length} Movies
+                                                {collection.parts.length} فيلم
                                             </div>
                                         )}
                                     </div>

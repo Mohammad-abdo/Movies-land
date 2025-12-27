@@ -5,9 +5,9 @@
     background-color: rgba($black, 0.8);
     border-right: 1px solid rgba($white, 0.1);
     padding: 2rem 0;
-    height: calc(100vh - #{$header-height});
+    height: calc(100vh - 60px); // Match compact header height
     position: sticky;
-    top: $header-height;
+    top: 60px; // Match compact header height
     overflow-y: auto;
     transition: all 0.3s ease;
 

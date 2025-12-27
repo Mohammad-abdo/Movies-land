@@ -201,6 +201,16 @@ const tmdbApi = {
             }
         });
     },
+    // Get TV season details
+    getSeasonDetails: (tvId, seasonNumber) => {
+        const url = `tv/${tvId}/season/${seasonNumber}`;
+        return axiosClient.get(url, { params: {} });
+    },
+    // Get TV episode details
+    getEpisodeDetails: (tvId, seasonNumber, episodeNumber) => {
+        const url = `tv/${tvId}/season/${seasonNumber}/episode/${episodeNumber}`;
+        return axiosClient.get(url, { params: {} });
+    },
 };
 
 export default tmdbApi;

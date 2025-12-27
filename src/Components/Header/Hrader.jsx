@@ -1,33 +1,35 @@
 import React, { useRef, useEffect, useState } from "react";
 import './Header.scss';
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { GoHeart } from "react-icons/go";
-import { FaSearch, FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
+import { FaSearch, FaBars, FaTimes } from 'react-icons/fa';
 import { useSelector } from "react-redux";
 import Input from '../input/Input';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const logo = 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Movieweb_Logo.png';
 
-const categories = [
-    { name: 'Movies', path: '/movie', subcategories: [
-        { name: 'Popular', path: '/movie' },
-        { name: 'Top Rated', path: '/movie?sort=top_rated' },
-        { name: 'Upcoming', path: '/movie?sort=upcoming' },
-        { name: 'Now Playing', path: '/movie?sort=now_playing' },
-        { name: 'Collections', path: '/collections' },
-    ]},
-    { name: 'TV Series', path: '/tv', subcategories: [
-        { name: 'Popular', path: '/tv' },
-        { name: 'Top Rated', path: '/tv?sort=top_rated' },
-        { name: 'On The Air', path: '/tv?sort=on_the_air' },
-        { name: 'Airing Today', path: '/tv?sort=airing_today' },
-    ]},
-    { name: 'Anime', path: '/anime' },
-    { name: 'Trending', path: '/trending' },
-    { name: 'Adult (18+)', path: '/adult', icon: '🔞' },
-];
-
 const Header = () => {
+    const { language, toggleLanguage, t } = useLanguage();
+    
+    const categories = [
+        { name: t('nav.movies'), path: '/movie', subcategories: [
+            { name: t('movies.popular'), path: '/movie' },
+            { name: t('movies.topRated'), path: '/movie?sort=top_rated' },
+            { name: t('movies.upcoming'), path: '/movie?sort=upcoming' },
+            { name: t('movies.nowPlaying'), path: '/movie?sort=now_playing' },
+            { name: t('nav.collections'), path: '/collections' },
+        ]},
+        { name: t('nav.tv'), path: '/tv', subcategories: [
+            { name: t('tv.popular'), path: '/tv' },
+            { name: t('tv.topRated'), path: '/tv?sort=top_rated' },
+            { name: t('tv.onAir'), path: '/tv?sort=on_the_air' },
+            { name: t('tv.airingToday'), path: '/tv?sort=airing_today' },
+        ]},
+        { name: t('nav.anime'), path: '/anime' },
+        { name: t('nav.manga'), path: '/manga' },
+        { name: t('nav.trending'), path: '/trending' },
+        { name: t('nav.adult'), path: '/adult', icon: '🔞' },
+    ];
     const { pathname } = useLocation();
     const navigate = useNavigate();
     const headerRef = useRef(null);
@@ -95,7 +97,6 @@ const Header = () => {
                                 className={`nav-link ${pathname.startsWith(category.path) ? 'active' : ''}`}
                             >
                                 {category.name}
-                                {category.subcategories && <FaChevronDown className="dropdown-icon" />}
                             </Link>
                             
                             {category.subcategories && activeDropdown === index && (
@@ -131,7 +132,7 @@ const Header = () => {
                             <div className={`search-input-wrapper ${searchOpen ? 'open' : ''}`}>
                                 <Input
                                     type="text"
-                                    placeholder="Search movies, TV shows..."
+                                    placeholder={language === 'ar' ? 'ابحث عن أفلام، مسلسلات...' : 'Search movies, TV shows...'}
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
@@ -142,13 +143,22 @@ const Header = () => {
                         </form>
                     </div>
 
+                    {/* Language Switcher */}
+                    <button 
+                        className="language-switcher"
+                        onClick={toggleLanguage}
+                        title={language === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'}
+                        aria-label={language === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'}
+                    >
+                        <span className="lang-code">{language === 'ar' ? 'EN' : 'عربي'}</span>
+                    </button>
+
                     {/* Favorites */}
-                    <Link to="/Favorites" className="favorites-link">
-                        <GoHeart className="favorites-icon" />
+                    <Link to="/Favorites" className="favorites-link" title={t('nav.favorites')}>
+                        <span className="favorites-text">{t('nav.favorites')}</span>
                         {favoritesCount > 0 && (
                             <span className="favorites-badge">{favoritesCount}</span>
                         )}
-                        <span className="favorites-text">Favorites</span>
                     </Link>
 
                     {/* Mobile Menu Toggle */}
@@ -178,9 +188,9 @@ const Header = () => {
                                     {category.name}
                                 </Link>
                                 {category.subcategories && (
-                                    <FaChevronDown 
-                                        className={`mobile-dropdown-icon ${activeDropdown === index ? 'open' : ''}`}
-                                    />
+                                    <span className={`mobile-dropdown-indicator ${activeDropdown === index ? 'open' : ''}`}>
+                                        ▼
+                                    </span>
                                 )}
                             </div>
                             {category.subcategories && activeDropdown === index && (
@@ -204,7 +214,7 @@ const Header = () => {
                         className="mobile-favorites-link"
                         onClick={closeMobileMenu}
                     >
-                        <GoHeart /> Favorites ({favoritesCount})
+                        {t('nav.favorites')} {favoritesCount > 0 && `(${favoritesCount})`}
                     </Link>
                 </nav>
             </div>

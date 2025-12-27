@@ -8,10 +8,15 @@ import { OutlineButton } from "../Components/Button/Button";
 import CastSection from "../Components/CastSection/CastSection";
 import Recommendations from "../Components/Recommendations/Recommendations";
 import WatchProviders from "../Components/WatchProviders/WatchProviders";
+import SeasonsList from "../Components/SeasonsList/SeasonsList";
+import SimilarContent from "../Components/SimilarContent/SimilarContent";
+import { category as cate } from "../api/tmdbApi";
+import { useLanguage } from "../contexts/LanguageContext";
 import './Details.scss';
 
 const Details = () => {
     const { category, id } = useParams();
+    const { t } = useLanguage();
     const [item, setItem] = useState(null);
     const [video, setVideo] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -65,10 +70,10 @@ const Details = () => {
         return (
             <div className="container details-error">
                 <Alert variant="danger" className="modern-alert">
-                    <Alert.Heading>Error Loading Content</Alert.Heading>
-                    <p>{error || 'Content not found'}</p>
+                    <Alert.Heading>{t('details.loadingError')}</Alert.Heading>
+                    <p>{error || t('details.notFound')}</p>
                     <Link to="/">
-                        <OutlineButton>Go to Home</OutlineButton>
+                        <OutlineButton>{t('details.goHome')}</OutlineButton>
                     </Link>
                 </Alert>
             </div>
@@ -114,7 +119,17 @@ const Details = () => {
                                     <span className="details-year">{new Date(releaseDate).getFullYear()}</span>
                                 )}
                                 {runtime && (
-                                    <span className="details-runtime">{runtime} min</span>
+                                    <span className="details-runtime">{runtime} {t('details.runtime')}</span>
+                                )}
+                                {category === cate.tv && item.number_of_seasons && (
+                                    <span className="details-seasons">
+                                        {item.number_of_seasons} {item.number_of_seasons === 1 ? t('details.season') : t('details.seasonsPlural')}
+                                    </span>
+                                )}
+                                {category === cate.tv && item.number_of_episodes && (
+                                    <span className="details-episodes">
+                                        {item.number_of_episodes} {t('details.episode')}
+                                    </span>
                                 )}
                                 {item.genres && item.genres.length > 0 && (
                                     <div className="details-genres">
@@ -134,11 +149,11 @@ const Details = () => {
                             <div className="details-actions">
                                 <Link to={`/${category}/${id}/watch`}>
                                     <button className="btn-primary">
-                                        ▶ Watch Now
+                                        ▶ {t('details.watchNow')}
                                     </button>
                                 </Link>
                                 <button className="btn-secondary">
-                                    + Add to Favorites
+                                    + {t('details.addToFavorites')}
                                 </button>
                             </div>
                         </div>
@@ -150,7 +165,7 @@ const Details = () => {
                 {/* Trailer Section */}
                 {video && (
                     <div className="details-section">
-                        <h2 className="section-title">Trailer</h2>
+                        <h2 className="section-title">{t('details.trailer')}</h2>
                         <div className="details-trailer">
                             <div className="ratio ratio-16x9">
                                 <iframe
@@ -167,46 +182,53 @@ const Details = () => {
 
                 {/* Additional Info */}
                 <div className="details-section">
-                    <h2 className="section-title">More Information</h2>
+                    <h2 className="section-title">{t('details.moreInfo')}</h2>
                     <div className="details-info-grid">
                         {item.status && (
                             <div className="info-item">
-                                <strong>Status:</strong>
+                                <strong>{t('details.status')}:</strong>
                                 <span>{item.status}</span>
                             </div>
                         )}
                         {item.original_language && (
                             <div className="info-item">
-                                <strong>Language:</strong>
+                                <strong>{t('details.language')}:</strong>
                                 <span>{item.original_language.toUpperCase()}</span>
                             </div>
                         )}
                         {item.budget && item.budget > 0 && (
                             <div className="info-item">
-                                <strong>Budget:</strong>
+                                <strong>{t('details.budget')}:</strong>
                                 <span>${item.budget.toLocaleString()}</span>
                             </div>
                         )}
                         {item.revenue && item.revenue > 0 && (
                             <div className="info-item">
-                                <strong>Revenue:</strong>
+                                <strong>{t('details.revenue')}:</strong>
                                 <span>${item.revenue.toLocaleString()}</span>
                             </div>
                         )}
                         {item.number_of_seasons && (
                             <div className="info-item">
-                                <strong>Seasons:</strong>
-                                <span>{item.number_of_seasons}</span>
+                                <strong>{t('details.seasons')}:</strong>
+                                <span>{item.number_of_seasons} {item.number_of_seasons === 1 ? t('details.season') : t('details.seasonsPlural')}</span>
                             </div>
                         )}
                         {item.number_of_episodes && (
                             <div className="info-item">
-                                <strong>Episodes:</strong>
-                                <span>{item.number_of_episodes}</span>
+                                <strong>{t('details.episodes')}:</strong>
+                                <span>{item.number_of_episodes} {t('common.episode')}</span>
                             </div>
                         )}
                     </div>
                 </div>
+
+                {/* Seasons & Episodes (TV Series only) */}
+                {category === cate.tv && item.number_of_seasons > 0 && (
+                    <div className="details-section">
+                        <SeasonsList tvId={id} totalSeasons={item.number_of_seasons} />
+                    </div>
+                )}
 
                 {/* Watch Providers */}
                 <WatchProviders category={category} id={id} />
@@ -218,17 +240,7 @@ const Details = () => {
                 <Recommendations category={category} id={id} />
 
                 {/* Similar Content */}
-                <div className="details-section">
-                    <div className="section-header">
-                        <h2 className="section-title">Similar Content</h2>
-                        <Link to={`/${category}`}>
-                            <OutlineButton className="modern-btn-outline">
-                                View All
-                            </OutlineButton>
-                        </Link>
-                    </div>
-                    <TopRated />
-                </div>
+                <SimilarContent category={category} id={id} />
             </div>
         </div>
     );

@@ -1,6 +1,9 @@
 @use '../Sass/' as *;
 
 .details-page {
+    @include mobile {
+        padding-bottom: 5rem; // Extra space for mobile nav
+    }
     min-height: 100vh;
     background: $body-bg;
 }

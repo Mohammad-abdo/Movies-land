@@ -1,0 +1,9 @@
+@use '../Sass/' as *;
+
+.upcoming-page {
+    padding-top: 60px;
+    min-height: 100vh;
+    background: $body-bg;
+    padding-bottom: 3rem;
+}
+
