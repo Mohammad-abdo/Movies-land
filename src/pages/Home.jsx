@@ -119,7 +119,7 @@ const Home = () => {
                             </div>
                             <div className="collections-preview">
                                 <p className="text-light text-center">
-                                    اكتشف سلاسل الأفلام والعروض الرائعة
+                                    {t('home.discoverCollections')}
                                 </p>
                             </div>
                         </section>

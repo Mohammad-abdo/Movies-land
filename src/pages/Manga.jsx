@@ -62,7 +62,7 @@ const Manga = () => {
     return (
         <div className="manga-page">
             <PageHeader>
-                {t('nav.manga') || (language === 'ar' ? 'مانجا' : 'Manga')}
+                {t('nav.manga')}
             </PageHeader>
             
             <Container>
@@ -72,7 +72,7 @@ const Manga = () => {
                         <InputGroup className="manga-search-input">
                             <Form.Control
                                 type="text"
-                                placeholder={language === 'ar' ? 'ابحث عن مانجا...' : 'Search manga...'}
+                                placeholder={t('manga.searchPlaceholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
@@ -139,10 +139,10 @@ const Manga = () => {
                                     {loading ? (
                                         <>
                                             <Spinner size="sm" style={{ marginRight: '0.5rem' }} /> 
-                                            {language === 'ar' ? 'جاري التحميل...' : 'Loading...'}
+                                            {t('common.loading')}
                                         </>
                                     ) : (
-                                        language === 'ar' ? 'تحميل المزيد' : 'Load More'
+                                        t('manga.loadMore')
                                     )}
                                 </button>
                             </div>

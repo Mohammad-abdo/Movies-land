@@ -23,7 +23,7 @@ const Upcoming = () => {
     return (
         <div className="upcoming-page">
             <PageHeader>
-                {language === 'ar' ? 'قريباً' : 'Upcoming'}
+                {t('pages.upcoming')}
             </PageHeader>
             
             <Container fluid className="catalog-page">

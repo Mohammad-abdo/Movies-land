@@ -61,11 +61,11 @@ const MangaDetails = () => {
                 <PageHeader>{t('nav.manga') || 'Manga'}</PageHeader>
                 <Container>
                     <Alert variant="danger">
-                        <Alert.Heading>{language === 'ar' ? 'خطأ' : 'Error'}</Alert.Heading>
-                        <p>{error || (language === 'ar' ? 'المانجا غير موجودة' : 'Manga not found')}</p>
+                        <Alert.Heading>{t('common.error')}</Alert.Heading>
+                        <p>{error || t('manga.notFound')}</p>
                         <Link to="/manga">
                             <button className="btn btn-primary">
-                                {language === 'ar' ? 'العودة إلى المانجا' : 'Back to Manga'}
+                                {t('manga.backToManga')}
                             </button>
                         </Link>
                     </Alert>
@@ -113,7 +113,7 @@ const MangaDetails = () => {
                             
                             {description && (
                                 <div className="manga-description">
-                                    <h3>{language === 'ar' ? 'الوصف' : 'Description'}</h3>
+                                    <h3>{t('manga.description')}</h3>
                                     <p>{description}</p>
                                 </div>
                             )}
@@ -121,13 +121,13 @@ const MangaDetails = () => {
                             <div className="manga-meta">
                                 {attributes.status && (
                                     <div className="meta-item">
-                                        <strong>{language === 'ar' ? 'الحالة' : 'Status'}:</strong>
+                                        <strong>{t('manga.status')}:</strong>
                                         <span>{attributes.status}</span>
                                     </div>
                                 )}
                                 {attributes.contentRating && (
                                     <div className="meta-item">
-                                        <strong>{language === 'ar' ? 'التصنيف' : 'Rating'}:</strong>
+                                        <strong>{t('manga.rating')}:</strong>
                                         <span>{attributes.contentRating}</span>
                                     </div>
                                 )}
@@ -139,7 +139,7 @@ const MangaDetails = () => {
                 {/* Chapters List */}
                 <div className="manga-chapters-section">
                     <h2 className="section-title">
-                        {language === 'ar' ? 'الفصول' : 'Chapters'} ({chapters.length})
+                        {t('manga.chapters')} ({chapters.length})
                     </h2>
                     
                     {chaptersLoading ? (
@@ -162,7 +162,7 @@ const MangaDetails = () => {
                                     >
                                         <div className="chapter-info">
                                             <span className="chapter-number">
-                                                {language === 'ar' ? 'الفصل' : 'Chapter'} {chapterNumber}
+                                                {t('manga.chapter')} {chapterNumber}
                                             </span>
                                             {chapterTitle && chapterTitle !== `Chapter ${chapterNumber}` && (
                                                 <span className="chapter-title">{chapterTitle}</span>
@@ -181,7 +181,7 @@ const MangaDetails = () => {
                         </div>
                     ) : (
                         <div className="no-chapters">
-                            <p>{language === 'ar' ? 'لا توجد فصول متاحة' : 'No chapters available'}</p>
+                            <p>{t('manga.noChapters')}</p>
                         </div>
                     )}
                 </div>

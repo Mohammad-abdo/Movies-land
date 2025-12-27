@@ -30,7 +30,7 @@ const TopRatedPage = () => {
     return (
         <div className="top-rated-page">
             <PageHeader>
-                {language === 'ar' ? 'الأعلى تقييماً' : 'Top Rated'}
+                {t('pages.topRated')}
             </PageHeader>
             
             <Container fluid>
@@ -50,13 +50,13 @@ const TopRatedPage = () => {
                             onSelect={(k) => setActiveTab(k || 'movies')}
                             className="top-rated-tabs"
                         >
-                            <Tab eventKey="movies" title={language === 'ar' ? 'أفلام' : 'Movies'}>
+                            <Tab eventKey="movies" title={t('nav.movies')}>
                                 <MovieGrid 
                                     category={cate.movie}
                                     filters={filters}
                                 />
                             </Tab>
-                            <Tab eventKey="tv" title={language === 'ar' ? 'مسلسلات' : 'TV Series'}>
+                            <Tab eventKey="tv" title={t('nav.tv')}>
                                 <MovieGrid 
                                     category={cate.tv}
                                     filters={filters}

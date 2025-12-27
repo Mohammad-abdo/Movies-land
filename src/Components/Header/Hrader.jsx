@@ -132,7 +132,7 @@ const Header = () => {
                             <div className={`search-input-wrapper ${searchOpen ? 'open' : ''}`}>
                                 <Input
                                     type="text"
-                                    placeholder={language === 'ar' ? 'ابحث عن أفلام، مسلسلات...' : 'Search movies, TV shows...'}
+                                    placeholder={t('nav.searchPlaceholder')}
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
@@ -147,10 +147,10 @@ const Header = () => {
                     <button 
                         className="language-switcher"
                         onClick={toggleLanguage}
-                        title={language === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'}
-                        aria-label={language === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'}
+                        title={t('nav.langSwitchTitle')}
+                        aria-label={t('nav.langSwitchTitle')}
                     >
-                        <span className="lang-code">{language === 'ar' ? 'EN' : 'عربي'}</span>
+                        <span className="lang-code">{t('nav.langCode')}</span>
                     </button>
 
                     {/* Favorites */}

@@ -17,8 +17,7 @@ const SearchAdvanced = () => {
     const [results, setResults] = useState({
         all: [],
         movies: [],
-        tv: [],
-        people: []
+        tv: []
     });
     const [loading, setLoading] = useState(false);
 
@@ -52,32 +51,20 @@ const SearchAdvanced = () => {
                 );
             }
 
-            // People search using multi-search
-            if (activeTab === 'all' || activeTab === 'people') {
-                searchPromises.push(
-                    fetch(`https://api.themoviedb.org/3/search/person?api_key=${process.env.REACT_APP_API_KEY || 'your-api-key'}&query=${encodeURIComponent(searchTerm)}&page=1`)
-                        .then(res => res.json())
-                        .then(res => ({ type: 'people', data: res.results || [] }))
-                        .catch(() => ({ type: 'people', data: [] }))
-                );
-            }
-
             const results = await Promise.all(searchPromises);
             
             const newResults = {
                 all: [],
                 movies: [],
-                tv: [],
-                people: []
+                tv: []
             };
 
             results.forEach(({ type, data }) => {
                 if (type === 'movies') newResults.movies = data;
                 if (type === 'tv') newResults.tv = data;
-                if (type === 'people') newResults.people = data;
             });
 
-            newResults.all = [...newResults.movies, ...newResults.tv, ...newResults.people];
+            newResults.all = [...newResults.movies, ...newResults.tv];
 
             setResults(newResults);
         } catch (error) {
@@ -105,7 +92,7 @@ const SearchAdvanced = () => {
     return (
         <div className="search-advanced-page">
             <PageHeader>
-                {language === 'ar' ? 'بحث متقدم' : 'Advanced Search'}
+                {t('pages.searchAdvanced')}
             </PageHeader>
             
             <Container>
@@ -115,13 +102,13 @@ const SearchAdvanced = () => {
                         <InputGroup className="search-input-group">
                             <Form.Control
                                 type="text"
-                                placeholder={language === 'ar' ? 'ابحث عن أفلام، مسلسلات، ممثلين...' : 'Search movies, TV shows, actors...'}
+                                placeholder={t('search.placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="search-input"
                             />
                             <Button type="submit" variant="danger" className="search-submit-btn">
-                                {language === 'ar' ? 'بحث' : 'Search'}
+                                {t('search.search')}
                             </Button>
                         </InputGroup>
                     </Form>
@@ -134,30 +121,33 @@ const SearchAdvanced = () => {
                         onSelect={(k) => setActiveTab(k || 'all')}
                         className="search-tabs"
                     >
-                        <Tab eventKey="all" title={language === 'ar' ? 'الكل' : 'All'} className="search-tab-content">
+                        <Tab eventKey="all" title={t('search.all')} className="search-tab-content">
                             <SearchResults 
                                 results={currentResults} 
                                 loading={loading}
                                 type="all"
                                 language={language}
+                                t={t}
                             />
                         </Tab>
-                        <Tab eventKey="movies" title={language === 'ar' ? 'أفلام' : 'Movies'}>
+                        <Tab eventKey="movies" title={t('nav.movies')}>
                             <SearchResults 
                                 results={currentResults} 
                                 loading={loading}
                                 type="movies"
                                 category={category.movie}
                                 language={language}
+                                t={t}
                             />
                         </Tab>
-                        <Tab eventKey="tv" title={language === 'ar' ? 'مسلسلات' : 'TV Series'}>
+                        <Tab eventKey="tv" title={t('nav.tv')}>
                             <SearchResults 
                                 results={currentResults} 
                                 loading={loading}
                                 type="tv"
                                 category={category.tv}
                                 language={language}
+                                t={t}
                             />
                         </Tab>
                     </Tabs>
@@ -165,7 +155,7 @@ const SearchAdvanced = () => {
 
                 {!query && (
                     <div className="search-empty-state">
-                        <p>{language === 'ar' ? 'ابدأ البحث عن المحتوى المفضل لديك' : 'Start searching for your favorite content'}</p>
+                        <p>{t('search.startSearching')}</p>
                     </div>
                 )}
             </Container>
@@ -173,7 +163,7 @@ const SearchAdvanced = () => {
     );
 };
 
-const SearchResults = ({ results, loading, type = 'all', category, language }) => {
+const SearchResults = ({ results, loading, type = 'all', category, language, t }) => {
     if (loading) {
         return (
             <div className="search-loading">
@@ -185,7 +175,7 @@ const SearchResults = ({ results, loading, type = 'all', category, language }) =
     if (!results || results.length === 0) {
         return (
             <div className="search-no-results">
-                <p>{language === 'ar' ? 'لا توجد نتائج' : 'No results found'}</p>
+                <p>{t('search.noResults')}</p>
             </div>
         );
     }
@@ -208,51 +198,4 @@ const SearchResults = ({ results, loading, type = 'all', category, language }) =
     );
 };
 
-const PeopleResults = ({ results, loading, language }) => {
-    if (loading) {
-        return (
-            <div className="search-loading">
-                <Spinner animation="border" variant="danger" size="lg" />
-            </div>
-        );
-    }
-
-    if (!results || results.length === 0) {
-        return (
-            <div className="search-no-results">
-                <p>{language === 'ar' ? 'لا توجد نتائج' : 'No results found'}</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="people-results-grid">
-            <Row>
-                {results.map((person) => (
-                    <Col key={person.id} xs={6} sm={4} md={3} lg={2} className="mb-4">
-                        <Link to={`/person/${person.id}`} className="person-card">
-                            <div className="person-image">
-                                <img 
-                                    src={`https://image.tmdb.org/t/p/w500${person.profile_path}` || 'https://via.placeholder.com/300x450?text=No+Image'}
-                                    alt={person.name}
-                                    onError={(e) => {
-                                        e.target.src = 'https://via.placeholder.com/300x450?text=No+Image';
-                                    }}
-                                />
-                            </div>
-                            <div className="person-info">
-                                <h5>{person.name}</h5>
-                                {person.known_for_department && (
-                                    <span className="person-department">{person.known_for_department}</span>
-                                )}
-                            </div>
-                        </Link>
-                    </Col>
-                ))}
-            </Row>
-        </div>
-    );
-};
-
 export default SearchAdvanced;
-

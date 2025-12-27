@@ -11,7 +11,7 @@ const MobileNavigation = () => {
     const favoritesCount = favorites?.length || 0;
 
     const navItems = [
-        { path: '/', icon: '🏠', label: language === 'ar' ? 'الرئيسية' : 'Home' },
+        { path: '/', icon: '🏠', label: t('pages.home') },
         { path: '/movie', icon: '🎬', label: t('nav.movies') },
         { path: '/tv', icon: '📺', label: t('nav.tv') },
         { path: '/manga', icon: '📚', label: t('nav.manga') },

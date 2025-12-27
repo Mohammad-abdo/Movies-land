@@ -87,11 +87,11 @@ const MangaChapter = () => {
             <div className="manga-chapter-error">
                 <Container>
                     <Alert variant="danger">
-                        <Alert.Heading>{language === 'ar' ? 'خطأ' : 'Error'}</Alert.Heading>
-                        <p>{error || (language === 'ar' ? 'الفصل غير موجود' : 'Chapter not found')}</p>
+                        <Alert.Heading>{t('common.error')}</Alert.Heading>
+                        <p>{error || t('manga.chapterNotFound')}</p>
                         <Link to={`/manga/${id}`}>
                             <Button variant="primary">
-                                {language === 'ar' ? 'العودة إلى المانجا' : 'Back to Manga'}
+                                {t('manga.backToManga')}
                             </Button>
                         </Link>
                     </Alert>
@@ -106,10 +106,10 @@ const MangaChapter = () => {
                 {/* Navigation Bar */}
                 <div className="chapter-navigation">
                     <Link to={`/manga/${id}`} className="back-btn">
-                        ← {language === 'ar' ? 'العودة' : 'Back'}
+                        ← {t('manga.back')}
                     </Link>
                     <div className="page-counter">
-                        {language === 'ar' ? 'صفحة' : 'Page'} {currentPage + 1} / {pages.length}
+                        {t('manga.page')} {currentPage + 1} / {pages.length}
                     </div>
                     <div className="chapter-controls">
                         <Button 
@@ -118,7 +118,7 @@ const MangaChapter = () => {
                             disabled={currentPage === 0}
                             className="nav-btn"
                         >
-                            ← {language === 'ar' ? 'السابقة' : 'Previous'}
+                            ← {t('manga.previous')}
                         </Button>
                         <Button 
                             variant="outline-light" 
@@ -126,7 +126,7 @@ const MangaChapter = () => {
                             disabled={currentPage === pages.length - 1}
                             className="nav-btn"
                         >
-                            {language === 'ar' ? 'التالي' : 'Next'} →
+                            {t('manga.next')} →
                         </Button>
                     </div>
                 </div>
@@ -150,7 +150,7 @@ const MangaChapter = () => {
                         onClick={handlePrevPage}
                         disabled={currentPage === 0}
                     >
-                        ← {language === 'ar' ? 'السابقة' : 'Previous Page'}
+                        ← {t('manga.previousPage')}
                     </Button>
                     <span className="page-indicator">
                         {currentPage + 1} / {pages.length}
@@ -160,7 +160,7 @@ const MangaChapter = () => {
                         onClick={handleNextPage}
                         disabled={currentPage === pages.length - 1}
                     >
-                        {language === 'ar' ? 'الصفحة التالية' : 'Next Page'} →
+                        {t('manga.nextPage')} →
                     </Button>
                 </div>
             </Container>

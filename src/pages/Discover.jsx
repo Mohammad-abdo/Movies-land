@@ -30,7 +30,7 @@ const Discover = () => {
     return (
         <div className="discover-page">
             <PageHeader>
-                {language === 'ar' ? 'استكشف' : 'Discover'}
+                {t('pages.discover')}
             </PageHeader>
             
             <Container fluid>
@@ -50,13 +50,13 @@ const Discover = () => {
                             onSelect={(k) => setActiveTab(k || 'movies')}
                             className="discover-tabs"
                         >
-                            <Tab eventKey="movies" title={language === 'ar' ? 'أفلام' : 'Movies'}>
+                            <Tab eventKey="movies" title={t('nav.movies')}>
                                 <MovieGrid 
                                     category={cate.movie}
                                     filters={filters}
                                 />
                             </Tab>
-                            <Tab eventKey="tv" title={language === 'ar' ? 'مسلسلات' : 'TV Series'}>
+                            <Tab eventKey="tv" title={t('nav.tv')}>
                                 <MovieGrid 
                                     category={cate.tv}
                                     filters={filters}
