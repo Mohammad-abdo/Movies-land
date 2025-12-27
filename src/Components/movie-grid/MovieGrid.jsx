@@ -29,7 +29,7 @@ const MovieGrid = props => {
                 
                 if (keyword === undefined) {
                     // Check if any filters are active
-                    const hasFilters = filters.genres?.length > 0 || filters.year || filters['vote_average.gte'] || filters.certification || (filters.sort_by && filters.sort_by !== 'popularity.desc');
+                    const hasFilters = filters.genres?.length > 0 || filters.year || filters['vote_average.gte'] || filters.certification || filters.country || (filters.sort_by && filters.sort_by !== 'popularity.desc');
                     
                     if (hasFilters) {
                         // Use discover endpoint with filters
@@ -59,6 +59,15 @@ const MovieGrid = props => {
                         if (filters.certification && props.category === category.movie) {
                             params.params.certification_country = 'US';
                             params.params.certification = filters.certification;
+                        }
+
+                        // Add country filter
+                        if (filters.country) {
+                            if (props.category === category.movie) {
+                                params.params.with_origin_country = filters.country;
+                            } else {
+                                params.params.with_origin_country = filters.country;
+                            }
                         }
                         
                         if (props.category === category.anime) {
@@ -129,7 +138,7 @@ const MovieGrid = props => {
     useEffect(() => {
         setPage(1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filters.genres?.length, filters.sort_by, filters.year, filters['vote_average.gte'], filters.certification]);
+    }, [filters.genres?.length, filters.sort_by, filters.year, filters['vote_average.gte'], filters.certification, filters.country]);
 
     if (loading && page === 1) {
         return (

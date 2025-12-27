@@ -1,0 +1,243 @@
+@use '../../Sass/' as *;
+
+.home-sidebar {
+    width: 280px;
+    background-color: rgba($black, 0.8);
+    border-right: 1px solid rgba($white, 0.1);
+    padding: 2rem 0;
+    height: calc(100vh - #{$header-height});
+    position: sticky;
+    top: $header-height;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+
+    @include tablet {
+        width: 260px;
+    }
+
+    @include mobile {
+        display: none; // Hide on mobile, can be toggled via button if needed
+    }
+
+    &__content {
+        padding: 0 1.5rem;
+    }
+
+    // Scrollbar Styling
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba($main-color, 0.3);
+        border-radius: 3px;
+
+        &:hover {
+            background: rgba($main-color, 0.5);
+        }
+    }
+}
+
+.sidebar-section {
+    margin-bottom: 2.5rem;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &__title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: $main-color;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        @include flex(center, flex-start);
+        gap: 0.5rem;
+
+        &__icon {
+            font-size: 1rem;
+        }
+    }
+}
+
+.sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.sidebar-link {
+    @include flex(center, flex-start);
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: rgba($txt-color, 0.8);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    width: 100%;
+
+    &:hover {
+        background-color: rgba($main-color, 0.1);
+        color: $txt-color;
+        transform: translateX(5px);
+    }
+
+    &.active {
+        background-color: rgba($main-color, 0.2);
+        color: $main-color;
+        font-weight: 600;
+        border-left: 3px solid $main-color;
+        padding-left: calc(1rem - 3px);
+    }
+
+    &__icon {
+        font-size: 1rem;
+        @include flex(center, center);
+    }
+
+    &__text {
+        flex: 1;
+    }
+}
+
+.sidebar-categories {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-category {
+    margin-bottom: 0.5rem;
+
+    &__header {
+        @include flex(center, space-between);
+        width: 100%;
+    }
+
+    &__link {
+        @include flex(center, flex-start);
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: rgba($txt-color, 0.8);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        flex: 1;
+
+        &:hover {
+            background-color: rgba($main-color, 0.1);
+            color: $txt-color;
+        }
+
+        &.active {
+            background-color: rgba($main-color, 0.2);
+            color: $main-color;
+            font-weight: 600;
+            border-left: 3px solid $main-color;
+            padding-left: calc(1rem - 3px);
+        }
+    }
+
+    &__icon {
+        font-size: 1rem;
+        @include flex(center, center);
+    }
+
+    &__name {
+        flex: 1;
+    }
+
+    &__toggle {
+        background: none;
+        border: none;
+        color: rgba($txt-color, 0.6);
+        cursor: pointer;
+        padding: 0.5rem;
+        @include flex(center, center);
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: $main-color;
+        }
+    }
+}
+
+.sidebar-subcategories {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0 0;
+    padding-left: 1rem;
+    border-left: 2px solid rgba($main-color, 0.3);
+    margin-left: 1.5rem;
+
+    li {
+        margin-bottom: 0.3rem;
+    }
+}
+
+.sidebar-subcategory {
+    &__link {
+        display: block;
+        padding: 0.5rem 1rem;
+        color: rgba($txt-color, 0.7);
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: rgba($main-color, 0.1);
+            color: $txt-color;
+            transform: translateX(5px);
+        }
+
+        &.active {
+            background-color: rgba($main-color, 0.15);
+            color: $main-color;
+            font-weight: 600;
+        }
+    }
+}
+
+.sidebar-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.sidebar-filter-chip {
+    @include flex(center, flex-start);
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background-color: rgba($white, 0.05);
+    color: rgba($txt-color, 0.8);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: 1px solid rgba($white, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: rgba($main-color, 0.2);
+        border-color: rgba($main-color, 0.5);
+        color: $txt-color;
+        transform: translateX(5px);
+    }
+
+    svg {
+        font-size: 0.85rem;
+        color: $main-color;
+    }
+}
+

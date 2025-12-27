@@ -1,4 +1,34 @@
 @use '../Sass/' as *;
 
-// Anime page uses modern styling from Catalog and global styles
+.catalog-page {
+    padding-top: $header-height;
+    min-height: calc(100vh - #{$header-height} - 100px);
 
+    .catalog-controls {
+        padding: 1rem 2rem;
+        
+        .filter-toggle-btn {
+            @include tablet {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+
+    .catalog-sidebar {
+        padding: 2rem;
+        background-color: $body-bg;
+        border-right: 1px solid rgba($white, 0.1);
+
+        @include mobile {
+            padding: 1rem;
+        }
+    }
+
+    .catalog-content {
+        padding: 2rem;
+
+        @include mobile {
+            padding: 1rem;
+        }
+    }
+}

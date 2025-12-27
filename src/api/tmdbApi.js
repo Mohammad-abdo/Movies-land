@@ -149,6 +149,58 @@ const tmdbApi = {
         const url = 'search/multi';
         return axiosClient.get(url, params);
     },
+    // Get movies by country
+    getMoviesByCountry: (countryCode, params) => {
+        const url = 'discover/movie';
+        return axiosClient.get(url, {
+            params: {
+                ...params.params,
+                with_origin_country: countryCode,
+            }
+        });
+    },
+    // Get TV by country
+    getTvByCountry: (countryCode, params) => {
+        const url = 'discover/tv';
+        return axiosClient.get(url, {
+            params: {
+                ...params.params,
+                with_origin_country: countryCode,
+            }
+        });
+    },
+    // Get adult content (18+)
+    getAdultContent: (cate, params) => {
+        const url = 'discover/' + category[cate];
+        return axiosClient.get(url, {
+            params: {
+                ...params.params,
+                certification_country: 'US',
+                certification: 'R', // R-rated for movies
+                'certification.gte': 'R',
+            }
+        });
+    },
+    // Get content by certification
+    getContentByCertification: (cate, certification, params) => {
+        const url = 'discover/' + category[cate];
+        return axiosClient.get(url, {
+            params: {
+                ...params.params,
+                certification_country: 'US',
+                certification: certification,
+            }
+        });
+    },
+    // Get watch providers by country
+    getWatchProvidersByCountry: (countryCode) => {
+        const url = 'watch/providers/movie';
+        return axiosClient.get(url, {
+            params: {
+                watch_region: countryCode,
+            }
+        });
+    },
 };
 
 export default tmdbApi;

@@ -1,0 +1,122 @@
+@use '../../Sass/' as *;
+
+.age-verification-modal {
+    .modal-content {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 20, 0.98));
+        border: 2px solid $main-color;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .modal-backdrop {
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+    }
+}
+
+.age-verification-content {
+    padding: 3rem;
+    text-align: center;
+    color: $txt-color;
+
+    @include mobile {
+        padding: 2rem 1.5rem;
+    }
+}
+
+.age-verification-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    animation: pulse 2s ease-in-out infinite;
+
+    @include mobile {
+        font-size: 4rem;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.age-verification-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $main-color;
+    margin-bottom: 1rem;
+
+    @include mobile {
+        font-size: 1.5rem;
+    }
+}
+
+.age-verification-text {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+
+    @include mobile {
+        font-size: 1rem;
+    }
+}
+
+.age-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: $txt-color;
+    font-size: 1.2rem;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 8px;
+
+    &:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: $main-color;
+        color: $txt-color;
+        box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
+    }
+
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+}
+
+.age-error {
+    color: $main-color;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-weight: 600;
+}
+
+.age-verification-actions {
+    margin-top: 2rem;
+}
+
+.verify-btn {
+    background: $main-color;
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: darken($main-color, 10%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+    }
+}
+
+.age-verification-disclaimer {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 2rem;
+    line-height: 1.5;
+}
+

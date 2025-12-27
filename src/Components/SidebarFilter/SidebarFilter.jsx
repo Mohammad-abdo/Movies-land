@@ -1,60 +1,105 @@
 import React, { useState, useEffect } from 'react';
 import tmdbApi from '../../api/tmdbApi';
 import { sortOptions } from '../../api/genres';
+import { countries } from '../../api/countries';
 import './SidebarFilter.scss';
 
-const SidebarFilter = ({ categoryType, onFilterChange, filters, onClose }) => {
-    const [genres, setGenres] = useState([]);
-    const [loading, setLoading] = useState(true);
+const SidebarFilter = ({ 
+    category, 
+    onFilterChange, 
+    initialGenre, 
+    initialRating,
+    adultContent = false,
+    countryCode = null
+}) => {
+    const [filters, setFilters] = useState({
+        genres: initialGenre ? initialGenre.split(',') : [],
+        sort_by: 'popularity.desc',
+        year: '',
+        'vote_average.gte': initialRating || '',
+        certification: adultContent ? 'R' : '',
+        country: countryCode || '',
+    });
+
+    const [availableGenres, setAvailableGenres] = useState([]);
+    const [loadingGenres, setLoadingGenres] = useState(true);
 
     useEffect(() => {
-        const loadGenres = async () => {
+        const fetchGenres = async () => {
             try {
-                const response = await tmdbApi.getGenres(categoryType === 'anime' ? 'tv' : categoryType);
-                setGenres(response.genres || []);
-            } catch (error) {
-                console.error('Error loading genres:', error);
+                setLoadingGenres(true);
+                // Anime uses TV endpoint, so map 'anime' to 'tv' for genres API
+                const categoryForGenres = category === 'anime' ? 'tv' : category;
+                if (!categoryForGenres) {
+                    setLoadingGenres(false);
+                    return;
+                }
+                const response = await tmdbApi.getGenres(categoryForGenres);
+                setAvailableGenres(response.genres || []);
+            } catch (err) {
+                console.error('Error fetching genres:', err);
             } finally {
-                setLoading(false);
+                setLoadingGenres(false);
             }
         };
-        loadGenres();
-    }, [categoryType]);
+        if (category) {
+            fetchGenres();
+        }
+    }, [category]);
 
     const handleGenreToggle = (genreId) => {
-        const currentGenres = filters.genres || [];
-        const newGenres = currentGenres.includes(genreId.toString())
-            ? currentGenres.filter(id => id !== genreId.toString())
-            : [...currentGenres, genreId.toString()];
-        
-        onFilterChange({ ...filters, genres: newGenres, page: 1 });
+        setFilters(prev => {
+            const newGenres = prev.genres.includes(String(genreId))
+                ? prev.genres.filter(id => id !== String(genreId))
+                : [...prev.genres, String(genreId)];
+            
+            const newFilters = { ...prev, genres: newGenres };
+            onFilterChange(newFilters);
+            return newFilters;
+        });
     };
 
     const handleSortChange = (e) => {
-        onFilterChange({ ...filters, sort_by: e.target.value, page: 1 });
+        const newFilters = { ...filters, sort_by: e.target.value };
+        setFilters(newFilters);
+        onFilterChange(newFilters);
     };
 
     const handleYearChange = (e) => {
-        onFilterChange({ ...filters, year: e.target.value || undefined, page: 1 });
+        const newFilters = { ...filters, year: e.target.value };
+        setFilters(newFilters);
+        onFilterChange(newFilters);
     };
 
     const handleRatingChange = (e) => {
-        onFilterChange({ ...filters, 'vote_average.gte': e.target.value || undefined, page: 1 });
+        const newFilters = { ...filters, 'vote_average.gte': e.target.value || '' };
+        setFilters(newFilters);
+        onFilterChange(newFilters);
     };
 
     const handleCertificationChange = (e) => {
-        onFilterChange({ ...filters, certification: e.target.value || undefined, page: 1 });
+        const newFilters = { ...filters, certification: e.target.value };
+        setFilters(newFilters);
+        onFilterChange(newFilters);
+    };
+
+    const handleCountryChange = (e) => {
+        const newFilters = { ...filters, country: e.target.value };
+        setFilters(newFilters);
+        onFilterChange(newFilters);
     };
 
     const clearFilters = () => {
-        onFilterChange({
+        const clearedFilters = {
             genres: [],
             sort_by: 'popularity.desc',
-            year: undefined,
-            'vote_average.gte': undefined,
-            certification: undefined,
-            page: 1
-        });
+            year: '',
+            'vote_average.gte': '',
+            certification: '',
+            country: '',
+        };
+        setFilters(clearedFilters);
+        onFilterChange(clearedFilters);
     };
 
     const activeFiltersCount = [
@@ -62,6 +107,7 @@ const SidebarFilter = ({ categoryType, onFilterChange, filters, onClose }) => {
         filters.year,
         filters['vote_average.gte'],
         filters.certification,
+        filters.country,
         filters.sort_by !== 'popularity.desc'
     ].filter(Boolean).length;
 
@@ -69,11 +115,6 @@ const SidebarFilter = ({ categoryType, onFilterChange, filters, onClose }) => {
         <div className="sidebar-filter">
             <div className="sidebar-filter__header">
                 <h3>Filters</h3>
-                {onClose && (
-                    <button className="sidebar-filter__close" onClick={onClose}>
-                        ×
-                    </button>
-                )}
                 {activeFiltersCount > 0 && (
                     <button className="sidebar-filter__clear" onClick={clearFilters}>
                         Clear All ({activeFiltersCount})
@@ -82,6 +123,25 @@ const SidebarFilter = ({ categoryType, onFilterChange, filters, onClose }) => {
             </div>
 
             <div className="sidebar-filter__content">
+                {/* Country Filter */}
+                {!countryCode && (
+                    <div className="filter-group">
+                        <label className="filter-label">Country/Region</label>
+                        <select 
+                            className="filter-select"
+                            value={filters.country}
+                            onChange={handleCountryChange}
+                        >
+                            <option value="">All Countries</option>
+                            {countries.map(country => (
+                                <option key={country.code} value={country.code}>
+                                    {country.flag} {country.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+
                 {/* Sort By */}
                 <div className="filter-group">
                     <label className="filter-label">Sort By</label>
@@ -101,18 +161,19 @@ const SidebarFilter = ({ categoryType, onFilterChange, filters, onClose }) => {
                 {/* Genres */}
                 <div className="filter-group">
                     <label className="filter-label">Genres</label>
-                    {loading ? (
-                        <div className="filter-loading">Loading genres...</div>
+                    {loadingGenres ? (
+                        <div className="loading-text">Loading genres...</div>
                     ) : (
-                        <div className="filter-genres">
-                            {genres.map(genre => (
-                                <button
-                                    key={genre.id}
-                                    className={`filter-genre-btn ${filters.genres?.includes(genre.id.toString()) ? 'active' : ''}`}
-                                    onClick={() => handleGenreToggle(genre.id)}
-                                >
-                                    {genre.name}
-                                </button>
+                        <div className="genres-list">
+                            {availableGenres.map(genre => (
+                                <label key={genre.id} className="genre-checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={filters.genres.includes(String(genre.id))}
+                                        onChange={() => handleGenreToggle(genre.id)}
+                                    />
+                                    <span>{genre.name}</span>
+                                </label>
                             ))}
                         </div>
                     )}
@@ -120,52 +181,50 @@ const SidebarFilter = ({ categoryType, onFilterChange, filters, onClose }) => {
 
                 {/* Year */}
                 <div className="filter-group">
-                    <label className="filter-label">Year</label>
+                    <label className="filter-label">Release Year</label>
                     <input
                         type="number"
                         className="filter-input"
-                        placeholder="e.g. 2023"
+                        placeholder="e.g., 2020"
+                        value={filters.year}
+                        onChange={handleYearChange}
                         min="1900"
                         max={new Date().getFullYear() + 1}
-                        value={filters.year || ''}
-                        onChange={handleYearChange}
                     />
                 </div>
 
-                {/* Minimum Rating */}
+                {/* Rating */}
                 <div className="filter-group">
                     <label className="filter-label">Minimum Rating</label>
-                    <div className="filter-rating">
-                        <input
-                            type="range"
-                            min="0"
-                            max="10"
-                            step="0.5"
-                            value={filters['vote_average.gte'] || 0}
-                            onChange={(e) => onFilterChange({ ...filters, 'vote_average.gte': e.target.value || undefined, page: 1 })}
-                            className="filter-range"
-                        />
-                        <span className="filter-rating-value">
-                            {filters['vote_average.gte'] ? `${filters['vote_average.gte']}/10` : 'Any'}
-                        </span>
+                    <input
+                        type="range"
+                        className="filter-range"
+                        min="0"
+                        max="10"
+                        step="0.5"
+                        value={filters['vote_average.gte'] || 0}
+                        onChange={handleRatingChange}
+                    />
+                    <div className="range-value">
+                        {filters['vote_average.gte'] || 0} / 10
                     </div>
                 </div>
 
-                {/* Age Rating (for movies only) */}
-                {categoryType === 'movie' && (
+                {/* Certification (Age Rating) */}
+                {category === 'movie' && (
                     <div className="filter-group">
                         <label className="filter-label">Age Rating</label>
-                        <select
+                        <select 
                             className="filter-select"
                             value={filters.certification || ''}
                             onChange={handleCertificationChange}
                         >
                             <option value="">All Ratings</option>
-                            <option value="G">G</option>
-                            <option value="PG">PG</option>
-                            <option value="PG-13">PG-13</option>
-                            <option value="R">R</option>
-                            <option value="NC-17">NC-17</option>
+                            <option value="G">G - General Audiences</option>
+                            <option value="PG">PG - Parental Guidance</option>
+                            <option value="PG-13">PG-13 - Parents Strongly Cautioned</option>
+                            <option value="R">R - Restricted (17+)</option>
+                            <option value="NC-17">NC-17 - Adults Only (18+)</option>
                         </select>
                     </div>
                 )}
@@ -175,4 +234,3 @@ const SidebarFilter = ({ categoryType, onFilterChange, filters, onClose }) => {
 };
 
 export default SidebarFilter;
-

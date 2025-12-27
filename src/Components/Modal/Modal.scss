@@ -1,4 +1,4 @@
-@use '../../sass/' as *;
+@use '../../Sass/' as *;
 
 .modal{
     @include flex(center,center);
@@ -18,8 +18,9 @@
         visibility: visible;
     }
     &__content{
-        padding: 2rem ;
-        color: $body-bg;
+        padding: 2rem;
+        background-color: $body-bg;
+        color: $txt-color;
         width: 50%;
         opacity: 0;
         transform: translateY(-250px);

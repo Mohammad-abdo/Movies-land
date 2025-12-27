@@ -1,0 +1,25 @@
+@use '../Sass/' as *;
+
+.adult-page {
+    .adult-badge {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .adult-warning {
+        background: rgba(255, 0, 0, 0.1);
+        border: 2px solid $main-color;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        text-align: center;
+
+        p {
+            color: $txt-color;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+    }
+}
+

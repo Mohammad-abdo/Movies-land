@@ -11,6 +11,10 @@ import Anime from './pages/Anime';
 import Trending from './pages/Trending';
 import Person from './pages/Person';
 import Search from './pages/Search';
+import Adult from './pages/Adult';
+import Collections from './pages/Collections';
+import Country from './pages/Country';
+import Reviews from './pages/Reviews';
 import NotFound from './Components/NotFound/NotFound';
 import { Provider } from 'react-redux';
 import Favorites from './Components/favorites/Favorites';
@@ -27,10 +31,14 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/trending" element={<Trending />} />
+            <Route path="/adult" element={<Adult />} />
+            <Route path="/collections" element={<Collections />} />
+            <Route path="/country/:countryCode" element={<Country />} />
             <Route path="/person/:id" element={<Person />} />
             <Route path="/anime/search/:keyword" element={<Anime />} />
             <Route path="/anime" element={<Anime />} />
             <Route path="/:category/search/:keyword" element={<Cataloge />} />
+            <Route path="/:category/:id/reviews" element={<Reviews />} />
             <Route path="/:category/:id" element={<Details />} />
             <Route path="/:category" element={<Cataloge />} />
             <Route path="/Favorites" element={<Favorites />} />

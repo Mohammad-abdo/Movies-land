@@ -13,6 +13,8 @@ const Footer = () => {
         { name: 'TV Series', path: '/tv' },
         { name: 'Anime', path: '/anime' },
         { name: 'Trending', path: '/trending' },
+        { name: 'Collections', path: '/collections' },
+        { name: 'Adult (18+)', path: '/adult', icon: '🔞' },
     ];
 
     const browseLinks = [

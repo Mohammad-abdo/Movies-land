@@ -45,9 +45,10 @@ const Catalog = () => {
                     {showFilters && (
                         <Col lg={3} className="catalog-sidebar">
                             <SidebarFilter
-                                categoryType={category === 'anime' ? 'anime' : category}
+                                category={category === 'anime' ? 'anime' : category}
                                 onFilterChange={handleFilterChange}
-                                filters={filters}
+                                initialGenre={filters.genres?.join(',')}
+                                initialRating={filters['vote_average.gte']}
                             />
                         </Col>
                     )}

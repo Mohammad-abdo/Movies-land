@@ -14,6 +14,7 @@ const categories = [
         { name: 'Top Rated', path: '/movie?sort=top_rated' },
         { name: 'Upcoming', path: '/movie?sort=upcoming' },
         { name: 'Now Playing', path: '/movie?sort=now_playing' },
+        { name: 'Collections', path: '/collections' },
     ]},
     { name: 'TV Series', path: '/tv', subcategories: [
         { name: 'Popular', path: '/tv' },
@@ -23,6 +24,7 @@ const categories = [
     ]},
     { name: 'Anime', path: '/anime' },
     { name: 'Trending', path: '/trending' },
+    { name: 'Adult (18+)', path: '/adult', icon: '🔞' },
 ];
 
 const Header = () => {

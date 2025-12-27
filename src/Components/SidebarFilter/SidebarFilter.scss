@@ -1,206 +1,221 @@
 @use '../../Sass/' as *;
 
 .sidebar-filter {
-    background: rgba(23, 23, 23, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    height: fit-content;
+    border-radius: 16px;
+    padding: 2rem;
     position: sticky;
     top: 100px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
 
-    &__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
 
-        h3 {
-            color: $txt-color;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin: 0;
+    &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $main-color;
+        border-radius: 10px;
+
+        &:hover {
+            background: darken($main-color, 10%);
         }
     }
 
-    &__close {
-        background: none;
-        border: none;
+    @include tablet {
+        position: relative;
+        top: 0;
+        max-height: none;
+        margin-bottom: 2rem;
+    }
+}
+
+.sidebar-filter__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid $main-color;
+
+    h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
         color: $txt-color;
-        font-size: 2rem;
+        margin: 0;
+    }
+
+    .sidebar-filter__clear {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
         cursor: pointer;
-        padding: 0;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
         transition: all 0.3s ease;
 
         &:hover {
             background: rgba(255, 0, 0, 0.2);
+            border-color: $main-color;
             color: $main-color;
         }
     }
+}
 
-    &__clear {
-        background: rgba(255, 0, 0, 0.2);
-        border: 1px solid $main-color;
-        color: $main-color;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-
-        &:hover {
-            background: $main-color;
-            color: white;
-        }
-    }
-
-    &__content {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+.sidebar-filter__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .filter-group {
+    .filter-label {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $main-color;
+        margin-bottom: 1rem;
+    }
+
+    .filter-select,
+    .filter-input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        color: $txt-color;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+
+        &:focus {
+            outline: none;
+            border-color: $main-color;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+        }
+
+        option {
+            background: $body-bg;
+            color: $txt-color;
+        }
+    }
+
+    .filter-range {
+        width: 100%;
+        height: 8px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        outline: none;
+        -webkit-appearance: none;
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: $main-color;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: scale(1.2);
+                box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            }
+        }
+
+        &::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: $main-color;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: scale(1.2);
+                box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            }
+        }
+    }
+
+    .range-value {
+        text-align: center;
+        color: $main-color;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-top: 0.5rem;
+    }
+}
+
+.genres-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-}
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
 
-.filter-label {
-    color: $txt-color;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.filter-select,
-.filter-input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 0.75rem;
-    color: $txt-color;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-
-    &:focus {
-        outline: none;
-        border-color: $main-color;
-        background: rgba(255, 255, 255, 0.1);
+    &::-webkit-scrollbar {
+        width: 6px;
     }
 
-    option {
-        background: $body-bg;
-        color: $txt-color;
+    &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $main-color;
+        border-radius: 3px;
     }
 }
 
-.filter-genres {
+.genre-checkbox-label {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.filter-genre-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-    color: $txt-color;
-    font-size: 0.9rem;
+    align-items: center;
+    gap: 0.75rem;
     cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
     transition: all 0.3s ease;
 
     &:hover {
-        background: rgba(255, 0, 0, 0.2);
-        border-color: $main-color;
-        color: $main-color;
-        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.05);
     }
 
-    &.active {
-        background: $main-color;
-        border-color: $main-color;
-        color: white;
+    input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: $main-color;
+    }
+
+    span {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+    }
+
+    &:hover span,
+    input:checked + span {
+        color: $main-color;
         font-weight: 600;
     }
 }
 
-.filter-rating {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.filter-range {
-    flex: 1;
-    height: 6px;
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.1);
-    outline: none;
-    -webkit-appearance: none;
-
-    &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: $main-color;
-        cursor: pointer;
-        transition: all 0.3s ease;
-
-        &:hover {
-            transform: scale(1.2);
-        }
-    }
-
-    &::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: $main-color;
-        cursor: pointer;
-        border: none;
-        transition: all 0.3s ease;
-
-        &:hover {
-            transform: scale(1.2);
-        }
-    }
-}
-
-.filter-rating-value {
-    color: $txt-color;
+.loading-text {
+    color: rgba(255, 255, 255, 0.6);
     font-size: 0.9rem;
-    font-weight: 600;
-    min-width: 50px;
-    text-align: right;
-}
-
-.filter-loading {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.9rem;
-    padding: 1rem;
     text-align: center;
+    padding: 1rem;
 }
-
-@include mobile {
-    .sidebar-filter {
-        position: relative;
-        top: 0;
-    }
-}
-
