@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Container, Row, Col, Tabs, Tab, Spinner, InputGroup, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Tabs, Tab, Spinner, InputGroup, Form, Button, Accordion, Badge } from 'react-bootstrap';
 import PageHeader from '../Components/page-header/PageHeader';
 import MovieCard from '../Components/movieCard/MovieCard';
 import { category } from '../api/tmdbApi';
 import tmdbApi from '../api/tmdbApi';
 import { useLanguage } from '../contexts/LanguageContext';
+import { FaFilter, FaSearch, FaTimes } from 'react-icons/fa';
+import API_CONFIG from '../api/apiConfig';
 import './SearchAdvanced.scss';
 
 const SearchAdvanced = () => {
@@ -17,9 +19,24 @@ const SearchAdvanced = () => {
     const [results, setResults] = useState({
         all: [],
         movies: [],
-        tv: []
+        tv: [],
+        anime: [],
+        manga: []
     });
     const [loading, setLoading] = useState(false);
+    const [filtersVisible, setFiltersVisible] = useState(false);
+    const [filters, setFilters] = useState({
+        year: '',
+        genre: '',
+        rating: '',
+        sortBy: 'popularity.desc'
+    });
+    const [selectedSources, setSelectedSources] = useState({
+        tmdb: true,
+        anilist: API_CONFIG.anilist.enabled,
+        kitsu: API_CONFIG.kitsu.enabled,
+        jikan: API_CONFIG.jikan.enabled
+    });
 
     useEffect(() => {
         if (query) {
@@ -81,6 +98,29 @@ const SearchAdvanced = () => {
         }
     };
 
+    const handleFilterChange = (filterName, value) => {
+        setFilters(prev => ({
+            ...prev,
+            [filterName]: value
+        }));
+    };
+
+    const clearFilters = () => {
+        setFilters({
+            year: '',
+            genre: '',
+            rating: '',
+            sortBy: 'popularity.desc'
+        });
+    };
+
+    const activeFiltersCount = [
+        filters.year,
+        filters.genre,
+        filters.rating,
+        filters.sortBy !== 'popularity.desc'
+    ].filter(Boolean).length;
+
     const getCurrentResults = () => {
         if (activeTab === 'movies') return results.movies;
         if (activeTab === 'tv') return results.tv;
@@ -102,16 +142,128 @@ const SearchAdvanced = () => {
                         <InputGroup className="search-input-group">
                             <Form.Control
                                 type="text"
-                                placeholder={t('search.placeholder')}
+                                placeholder={t('search.placeholder') || 'Search movies, TV, anime, manga...'}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="search-input"
                             />
+                            <Button 
+                                type="button"
+                                variant="outline-secondary"
+                                className="filter-toggle-btn"
+                                onClick={() => setFiltersVisible(!filtersVisible)}
+                                title="Toggle Filters"
+                            >
+                                <FaFilter />
+                                {activeFiltersCount > 0 && (
+                                    <Badge bg="danger" className="filter-badge">
+                                        {activeFiltersCount}
+                                    </Badge>
+                                )}
+                            </Button>
                             <Button type="submit" variant="danger" className="search-submit-btn">
-                                {t('search.search')}
+                                <FaSearch /> {t('search.search') || 'Search'}
                             </Button>
                         </InputGroup>
                     </Form>
+
+                    {/* Advanced Filters */}
+                    {filtersVisible && (
+                        <div className="advanced-filters-panel">
+                            <div className="filters-header">
+                                <h5>Advanced Filters</h5>
+                                <Button 
+                                    variant="link" 
+                                    size="sm"
+                                    onClick={clearFilters}
+                                    className="clear-filters-btn"
+                                >
+                                    Clear All
+                                </Button>
+                            </div>
+                            <Row>
+                                <Col md={3}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Year</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="e.g., 2020"
+                                            value={filters.year}
+                                            onChange={(e) => handleFilterChange('year', e.target.value)}
+                                            min="1900"
+                                            max={new Date().getFullYear() + 1}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={3}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Min Rating</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="e.g., 7.0"
+                                            value={filters.rating}
+                                            onChange={(e) => handleFilterChange('rating', e.target.value)}
+                                            min="0"
+                                            max="10"
+                                            step="0.1"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={3}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Sort By</Form.Label>
+                                        <Form.Select
+                                            value={filters.sortBy}
+                                            onChange={(e) => handleFilterChange('sortBy', e.target.value)}
+                                        >
+                                            <option value="popularity.desc">Popularity</option>
+                                            <option value="vote_average.desc">Rating</option>
+                                            <option value="release_date.desc">Newest</option>
+                                            <option value="release_date.asc">Oldest</option>
+                                            <option value="title.asc">Title A-Z</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Col>
+                                <Col md={3}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Search Sources</Form.Label>
+                                        <div className="source-checkboxes">
+                                            <Form.Check
+                                                type="checkbox"
+                                                label="TMDB"
+                                                checked={selectedSources.tmdb}
+                                                onChange={(e) => setSelectedSources(prev => ({...prev, tmdb: e.target.checked}))}
+                                            />
+                                            {API_CONFIG.anilist.enabled && (
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    label="AniList"
+                                                    checked={selectedSources.anilist}
+                                                    onChange={(e) => setSelectedSources(prev => ({...prev, anilist: e.target.checked}))}
+                                                />
+                                            )}
+                                            {API_CONFIG.kitsu.enabled && (
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    label="Kitsu"
+                                                    checked={selectedSources.kitsu}
+                                                    onChange={(e) => setSelectedSources(prev => ({...prev, kitsu: e.target.checked}))}
+                                                />
+                                            )}
+                                            {API_CONFIG.jikan.enabled && (
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    label="Jikan"
+                                                    checked={selectedSources.jikan}
+                                                    onChange={(e) => setSelectedSources(prev => ({...prev, jikan: e.target.checked}))}
+                                                />
+                                            )}
+                                        </div>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                        </div>
+                    )}
                 </div>
 
                 {/* Search Tabs */}

@@ -80,10 +80,16 @@ const Header = () => {
     const handleSearch = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
+            // Navigate to advanced search page
             navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
             setSearchOpen(false);
             setSearchQuery('');
         }
+    };
+
+    const handleAdvancedSearch = () => {
+        navigate('/search');
+        setSearchOpen(false);
     };
 
     const handleDropdownToggle = (index) => {
@@ -153,12 +159,20 @@ const Header = () => {
                             <div className={`search-input-wrapper ${searchOpen ? 'open' : ''}`}>
                                 <Input
                                     type="text"
-                                    placeholder={t('nav.searchPlaceholder')}
+                                    placeholder={t('nav.searchPlaceholder') || 'Search movies, TV, anime, manga...'}
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
-                                <button type="submit" className="search-submit">
+                                <button type="submit" className="search-submit" title="Search">
                                     <FaSearch />
+                                </button>
+                                <button 
+                                    type="button" 
+                                    className="advanced-search-link"
+                                    onClick={handleAdvancedSearch}
+                                    title="Advanced Search"
+                                >
+                                    ⚙️
                                 </button>
                             </div>
                         </form>
