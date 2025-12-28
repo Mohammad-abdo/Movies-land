@@ -5,5 +5,24 @@
     min-height: 100vh;
     background: $body-bg;
     padding-bottom: 3rem;
+
+    @include mobile {
+        padding-bottom: 5rem;
+    }
 }
+
+.upcoming-mobile-controls {
+    margin-bottom: 1.5rem;
+
+    @include desktop {
+        display: none;
+    }
+}
+
+.catalog-sidebar {
+    @include tablet {
+        display: none;
+    }
+}
+
 

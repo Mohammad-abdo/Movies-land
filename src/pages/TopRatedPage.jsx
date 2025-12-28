@@ -3,6 +3,7 @@ import { Container, Row, Col, Tabs, Tab } from 'react-bootstrap';
 import PageHeader from '../Components/page-header/PageHeader';
 import MovieGrid from '../Components/movie-grid/MovieGrid';
 import SidebarFilter from '../Components/SidebarFilter/SidebarFilter';
+import MobileFilterDrawer from '../Components/MobileFilterDrawer/MobileFilterDrawer';
 import { category as cate } from '../api/tmdbApi';
 import { useLanguage } from '../contexts/LanguageContext';
 import './TopRatedPage.scss';
@@ -27,6 +28,13 @@ const TopRatedPage = () => {
         return cate.movie;
     };
 
+    const activeFiltersCount = [
+        filters.genres?.length > 0,
+        filters.year,
+        filters['vote_average.gte'],
+        filters.sort_by !== 'vote_average.desc'
+    ].filter(Boolean).length;
+
     return (
         <div className="top-rated-page">
             <PageHeader>
@@ -34,6 +42,16 @@ const TopRatedPage = () => {
             </PageHeader>
             
             <Container fluid>
+                <div className="top-rated-mobile-controls">
+                    <MobileFilterDrawer
+                        category={getCategoryName()}
+                        onFilterChange={handleFilterChange}
+                        initialGenre={filters.genres?.join(',')}
+                        initialRating={filters['vote_average.gte']}
+                        activeFiltersCount={activeFiltersCount}
+                    />
+                </div>
+
                 <Row>
                     <Col lg={3} className="top-rated-sidebar">
                         <SidebarFilter

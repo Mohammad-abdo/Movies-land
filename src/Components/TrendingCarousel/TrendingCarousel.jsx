@@ -111,3 +111,4 @@ const TrendingCarousel = ({ mediaType = 'all' }) => {
 
 export default TrendingCarousel;
 
+

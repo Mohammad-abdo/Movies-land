@@ -91,3 +91,4 @@ const AnimeCarousel = () => {
 
 export default AnimeCarousel;
 
+

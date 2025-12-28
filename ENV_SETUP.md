@@ -33,3 +33,4 @@ If you get API errors:
 3. Restart the development server (`npm start`)
 4. Ensure there are no extra spaces or quotes around the API key value
 
+

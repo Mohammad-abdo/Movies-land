@@ -56,6 +56,27 @@ const Header = () => {
         };
     }, []);
 
+    // Close mobile menu when pressing escape key and prevent body scroll
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (e.key === 'Escape' && mobileMenuOpen) {
+                setMobileMenuOpen(false);
+            }
+        };
+
+        if (mobileMenuOpen) {
+            document.addEventListener('keydown', handleEscape);
+            document.body.style.overflow = 'hidden'; // Prevent body scroll when menu is open
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.body.style.overflow = '';
+        };
+    }, [mobileMenuOpen]);
+
     const handleSearch = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
@@ -164,12 +185,26 @@ const Header = () => {
                     {/* Mobile Menu Toggle */}
                     <button 
                         className="mobile-menu-toggle"
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setMobileMenuOpen(!mobileMenuOpen);
+                        }}
+                        aria-label="Toggle mobile menu"
+                        aria-expanded={mobileMenuOpen}
                     >
                         {mobileMenuOpen ? <FaTimes /> : <FaBars />}
                     </button>
                 </div>
             </div>
+
+            {/* Mobile Menu Overlay */}
+            {mobileMenuOpen && (
+                <div 
+                    className="mobile-menu-overlay"
+                    onClick={closeMobileMenu}
+                ></div>
+            )}
 
             {/* Mobile Menu */}
             <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
@@ -178,19 +213,27 @@ const Header = () => {
                         <div key={index} className="mobile-nav-item">
                             <div 
                                 className="mobile-nav-link-header"
-                                onClick={() => category.subcategories && handleDropdownToggle(index)}
                             >
-                                <Link 
-                                    to={category.path}
-                                    className="mobile-nav-link"
-                                    onClick={closeMobileMenu}
-                                >
-                                    {category.name}
-                                </Link>
-                                {category.subcategories && (
-                                    <span className={`mobile-dropdown-indicator ${activeDropdown === index ? 'open' : ''}`}>
-                                        ▼
-                                    </span>
+                                {category.subcategories ? (
+                                    <>
+                                        <button
+                                            className="mobile-nav-link mobile-nav-button"
+                                            onClick={() => handleDropdownToggle(index)}
+                                        >
+                                            {category.name}
+                                        </button>
+                                        <span className={`mobile-dropdown-indicator ${activeDropdown === index ? 'open' : ''}`}>
+                                            ▼
+                                        </span>
+                                    </>
+                                ) : (
+                                    <Link 
+                                        to={category.path}
+                                        className="mobile-nav-link"
+                                        onClick={closeMobileMenu}
+                                    >
+                                        {category.name}
+                                    </Link>
                                 )}
                             </div>
                             {category.subcategories && activeDropdown === index && (

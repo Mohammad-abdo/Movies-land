@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { FaHome, FaFilm, FaTv, FaBookOpen, FaHeart } from 'react-icons/fa';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useSelector } from 'react-redux';
 import './MobileNavigation.scss';
@@ -11,11 +12,11 @@ const MobileNavigation = () => {
     const favoritesCount = favorites?.length || 0;
 
     const navItems = [
-        { path: '/', icon: '🏠', label: t('pages.home') },
-        { path: '/movie', icon: '🎬', label: t('nav.movies') },
-        { path: '/tv', icon: '📺', label: t('nav.tv') },
-        { path: '/manga', icon: '📚', label: t('nav.manga') },
-        { path: '/Favorites', icon: '❤️', label: t('nav.favorites'), badge: favoritesCount },
+        { path: '/', icon: FaHome, label: t('pages.home') },
+        { path: '/movie', icon: FaFilm, label: t('nav.movies') },
+        { path: '/tv', icon: FaTv, label: t('nav.tv') },
+        { path: '/manga', icon: FaBookOpen, label: t('nav.manga') },
+        { path: '/Favorites', icon: FaHeart, label: t('nav.favorites'), badge: favoritesCount },
     ];
 
     const isActive = (path) => {
@@ -27,19 +28,22 @@ const MobileNavigation = () => {
 
     return (
         <nav className="mobile-bottom-nav">
-            {navItems.map((item) => (
-                <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`mobile-nav-item ${isActive(item.path) ? 'active' : ''}`}
-                >
-                    <span className="mobile-nav-icon">{item.icon}</span>
-                    <span className="mobile-nav-label">{item.label}</span>
-                    {item.badge > 0 && (
-                        <span className="mobile-nav-badge">{item.badge}</span>
-                    )}
-                </Link>
-            ))}
+            {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                    <Link
+                        key={item.path}
+                        to={item.path}
+                        className={`mobile-nav-item ${isActive(item.path) ? 'active' : ''}`}
+                    >
+                        <Icon className="mobile-nav-icon" />
+                        <span className="mobile-nav-label">{item.label}</span>
+                        {item.badge > 0 && (
+                            <span className="mobile-nav-badge">{item.badge}</span>
+                        )}
+                    </Link>
+                );
+            })}
         </nav>
     );
 };

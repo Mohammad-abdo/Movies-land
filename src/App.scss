@@ -34,7 +34,11 @@ body {
     overflow-x: hidden;
 
     @include mobile {
-        margin-bottom: 3rem;
+        margin-bottom: 0;
+        padding-bottom: env(safe-area-inset-bottom);
+        -webkit-tap-highlight-color: transparent;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
@@ -168,4 +172,18 @@ iframe {
     transition-property: color, background-color, border-color, transform, opacity, box-shadow;
     transition-duration: 0.3s;
     transition-timing-function: ease;
+}
+
+// Modern mobile app enhancements
+@include mobile {
+    html {
+        -webkit-text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    // Improve touch targets
+    button, a, input, select, textarea {
+        touch-action: manipulation;
+    }
 }

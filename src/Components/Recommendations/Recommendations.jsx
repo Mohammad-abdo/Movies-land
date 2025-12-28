@@ -60,3 +60,4 @@ const Recommendations = ({ category: cate, id }) => {
 
 export default Recommendations;
 
+

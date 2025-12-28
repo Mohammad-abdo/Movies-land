@@ -152,3 +152,4 @@ const BestMoviesSlider = () => {
 
 export default BestMoviesSlider;
 
+

@@ -107,3 +107,4 @@ const WatchProviders = ({ category, id }) => {
 
 export default WatchProviders;
 
+

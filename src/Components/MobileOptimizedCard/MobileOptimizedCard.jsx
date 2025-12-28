@@ -43,3 +43,4 @@ const MobileOptimizedCard = ({ item, category: cate }) => {
 
 export default MobileOptimizedCard;
 
+

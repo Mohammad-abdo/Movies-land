@@ -87,3 +87,4 @@ const CastSection = ({ category, id }) => {
 
 export default CastSection;
 
+

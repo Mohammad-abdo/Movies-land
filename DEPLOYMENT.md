@@ -34,3 +34,4 @@ If you want to deploy to GitHub Pages instead:
 
 **Note:** You cannot use both Vercel and GitHub Pages with the same homepage configuration. Choose one deployment method.
 
+
