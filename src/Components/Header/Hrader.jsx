@@ -212,28 +212,31 @@ const Header = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu Overlay */}
-            <div 
-                className={`mobile-menu-overlay ${mobileMenuOpen ? 'visible' : ''}`}
-                onClick={closeMobileMenu}
-            ></div>
-
             {/* Mobile Sidebar Menu */}
-            <div className={`mobile-sidebar ${mobileMenuOpen ? 'open' : ''}`}>
-                <div className="sidebar-header">
-                    <Link to="/" className="sidebar-logo" onClick={closeMobileMenu}>
-                        <span className="sidebar-logo-text">Movies Land</span>
-                    </Link>
-                    <button 
-                        className="sidebar-close-btn"
+            {mobileMenuOpen && (
+                <>
+                    {/* Mobile Menu Overlay */}
+                    <div 
+                        className="mobile-menu-overlay"
                         onClick={closeMobileMenu}
-                        aria-label="Close menu"
-                    >
-                        <FaTimes />
-                    </button>
-                </div>
-                
-                <nav className="sidebar-nav">
+                    ></div>
+
+                    {/* Mobile Sidebar */}
+                    <div className="mobile-sidebar">
+                        <div className="sidebar-header">
+                            <Link to="/" className="sidebar-logo" onClick={closeMobileMenu}>
+                                <span className="sidebar-logo-text">Movies Land</span>
+                            </Link>
+                            <button 
+                                className="sidebar-close-btn"
+                                onClick={closeMobileMenu}
+                                aria-label="Close menu"
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+                        
+                        <nav className="sidebar-nav">
                     {categories.map((category, index) => (
                         <div key={index} className="sidebar-nav-item">
                             {category.subcategories ? (
