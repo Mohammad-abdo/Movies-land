@@ -24,40 +24,63 @@ const Collections = () => {
                 
                 // Fetch multiple pages to get more collections
                 const collectionMap = new Map();
-                const pagesToFetch = [1, 2, 3, 4, 5];
+                const pagesToFetch = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Fetch more pages
                 
                 // Fetch multiple pages in parallel
                 const pagePromises = pagesToFetch.map(page => 
-                    tmdbApi.getMoviesList('popular', { params: { page } })
+                    tmdbApi.getMoviesList('popular', { params: { page } }).catch(err => {
+                        console.warn(`Error fetching page ${page}:`, err);
+                        return { results: [] }; // Return empty results on error
+                    })
                 );
                 
                 const responses = await Promise.all(pagePromises);
                 
                 // Extract unique collections from all pages
                 responses.forEach(response => {
-                    response.results?.forEach(movie => {
-                        if (movie.belongs_to_collection) {
-                            const collectionId = movie.belongs_to_collection.id;
-                            if (!collectionMap.has(collectionId)) {
-                                collectionMap.set(collectionId, {
-                                    id: collectionId,
-                                    name: movie.belongs_to_collection.name,
-                                    poster_path: movie.belongs_to_collection.poster_path,
-                                    backdrop_path: movie.belongs_to_collection.backdrop_path,
-                                });
+                    if (response && response.results) {
+                        response.results.forEach(movie => {
+                            if (movie.belongs_to_collection && movie.belongs_to_collection.id) {
+                                const collectionId = movie.belongs_to_collection.id;
+                                if (!collectionMap.has(collectionId)) {
+                                    collectionMap.set(collectionId, {
+                                        id: collectionId,
+                                        name: movie.belongs_to_collection.name,
+                                        poster_path: movie.belongs_to_collection.poster_path,
+                                        backdrop_path: movie.belongs_to_collection.backdrop_path,
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 });
                 
                 // Convert map to array and fetch full collection details
                 const collectionArray = Array.from(collectionMap.values());
                 
-                // Fetch full collection details for each collection
-                const collectionPromises = collectionArray.slice(0, 20).map(async (col) => {
+                if (collectionArray.length === 0) {
+                    setError(t('collections.noCollectionsFound'));
+                    setLoading(false);
+                    return;
+                }
+                
+                // Fetch full collection details for each collection with error handling
+                const collectionPromises = collectionArray.slice(0, 30).map(async (col) => {
                     try {
                         const details = await tmdbApi.getCollection(col.id);
-                        return details;
+                        // Ensure the response has the expected structure
+                        if (details && details.id) {
+                            return details;
+                        }
+                        // Return basic info if response is invalid
+                        return {
+                            id: col.id,
+                            name: col.name,
+                            poster_path: col.poster_path,
+                            backdrop_path: col.backdrop_path,
+                            parts: details?.parts || [],
+                            overview: details?.overview || ''
+                        };
                     } catch (err) {
                         console.error(`Error fetching collection ${col.id}:`, err);
                         // Return basic collection info if details fetch fails
@@ -66,15 +89,25 @@ const Collections = () => {
                             name: col.name,
                             poster_path: col.poster_path,
                             backdrop_path: col.backdrop_path,
-                            parts: []
+                            parts: [],
+                            overview: ''
                         };
                     }
                 });
                 
                 const collectionsData = await Promise.all(collectionPromises);
-                // Filter out null/undefined and collections without parts
-                const validCollections = collectionsData.filter(c => c && c.parts && c.parts.length > 0);
-                setCollections(validCollections);
+                // Filter out null/undefined and keep collections that have at least a name
+                const validCollections = collectionsData.filter(c => 
+                    c && 
+                    c.id && 
+                    c.name && 
+                    (c.parts && c.parts.length > 0 || c.poster_path || c.backdrop_path)
+                );
+                
+                // Sort by number of parts (more parts = better collection)
+                validCollections.sort((a, b) => (b.parts?.length || 0) - (a.parts?.length || 0));
+                
+                setCollections(validCollections.slice(0, 20)); // Limit to top 20
                 
                 if (validCollections.length === 0) {
                     setError(t('collections.noCollectionsFound'));

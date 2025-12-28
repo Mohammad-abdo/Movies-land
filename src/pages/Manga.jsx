@@ -29,10 +29,33 @@ const Manga = () => {
                     data = await mangaApi.getPopularManga(20, (currentPage - 1) * 20);
                 }
                 
+                // Store included data for image URLs - MangaDex API returns includes array
+                const includedData = (data && data.included) ? data.included : [];
+                const mangaWithIncludes = (data.data || []).map(manga => {
+                    // Also try to find cover art in the relationships if not in includes
+                    if (manga.relationships) {
+                        const coverRel = manga.relationships.find(r => r.type === 'cover_art');
+                        if (coverRel && !includedData.find(i => i.id === coverRel.id && i.type === 'cover_art')) {
+                            // Try to find it in the main data's includes if available
+                            const allIncludes = [...includedData];
+                            // Store with manga for image URL generation
+                            return {
+                                ...manga,
+                                _includedData: allIncludes,
+                                _coverId: coverRel.id
+                            };
+                        }
+                    }
+                    return {
+                        ...manga,
+                        _includedData: includedData
+                    };
+                });
+                
                 if (currentPage === 1) {
-                    setMangaList(data.data || []);
+                    setMangaList(mangaWithIncludes);
                 } else {
-                    setMangaList(prev => [...prev, ...(data.data || [])]);
+                    setMangaList(prev => [...prev, ...mangaWithIncludes]);
                 }
                 
                 setHasMore((data.data || []).length === 20);
@@ -97,20 +120,27 @@ const Manga = () => {
                     <>
                         <Row className="manga-grid">
                             {mangaList.map((manga) => {
-                                const coverUrl = getMangaImageUrl(manga, 'large');
+                                const coverUrl = getMangaImageUrl(manga, 'large', manga._includedData);
                                 const title = getMangaTitle(manga);
                                 
                                 return (
-                                    <Col key={manga.id} xs={6} sm={4} md={3} lg={2} className="manga-card-col">
+                                    <Col key={manga.id} xs={4} sm={4} md={3} lg={2} className="manga-card-col">
                                         <Link to={`/manga/${manga.id}`} className="manga-card">
                                             <div className="manga-cover">
-                                                <img 
-                                                    src={coverUrl || 'https://via.placeholder.com/300x400?text=No+Cover'} 
-                                                    alt={title}
-                                                    onError={(e) => {
-                                                        e.target.src = 'https://via.placeholder.com/300x400?text=No+Cover';
-                                                    }}
-                                                />
+                                                {coverUrl ? (
+                                                    <img 
+                                                        src={coverUrl} 
+                                                        alt={title}
+                                                        loading="lazy"
+                                                        onError={(e) => {
+                                                            e.target.style.display = 'none';
+                                                            e.target.nextElementSibling?.classList.add('show');
+                                                        }}
+                                                    />
+                                                ) : null}
+                                                <div className={`manga-cover-placeholder ${!coverUrl ? 'show' : ''}`}>
+                                                    <span>{title.charAt(0).toUpperCase()}</span>
+                                                </div>
                                                 <div className="manga-overlay">
                                                     <div className="manga-rating">
                                                         ⭐ {manga.attributes?.contentRating || 'N/A'}

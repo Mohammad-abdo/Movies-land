@@ -26,7 +26,13 @@ const MangaDetails = () => {
                     mangaApi.getMangaChapters(id).catch(() => ({ data: [] }))
                 ]);
                 
-                setManga(mangaData.data);
+                // Store included data with manga for image URL generation
+                const manga = mangaData.data;
+                const includedData = mangaData.included || [];
+                setManga({
+                    ...manga,
+                    _includedData: includedData
+                });
                 setChapters(chaptersData.data || []);
             } catch (err) {
                 setError(err.message || 'Failed to load manga');
@@ -74,7 +80,7 @@ const MangaDetails = () => {
         );
     }
 
-    const coverUrl = getMangaImageUrl(manga, 'large');
+    const coverUrl = getMangaImageUrl(manga, 'large', manga._includedData);
     const title = getMangaTitle(manga);
     const description = getMangaDescription(manga);
     const attributes = manga.attributes || {};

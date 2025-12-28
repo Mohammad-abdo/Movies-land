@@ -5,18 +5,38 @@ const MANGA_DEX_BASE_URL = process.env.NODE_ENV === 'production'
     : 'https://api.mangadex.org';
 
 // Helper function to build image URL
-export const getMangaImageUrl = (manga, size = 'medium') => {
+export const getMangaImageUrl = (manga, size = 'medium', includedData = null) => {
     if (!manga.relationships) return null;
     
+    // Find cover_art relationship
     const coverRelationship = manga.relationships.find(rel => rel.type === 'cover_art');
-    if (!coverRelationship || !coverRelationship.attributes) return null;
+    if (!coverRelationship) return null;
     
-    const fileName = coverRelationship.attributes.fileName;
+    const coverId = coverRelationship.id;
     const mangaId = manga.id;
+    
+    // Try to find cover art data in included array (from API response)
+    let fileName = null;
+    if (includedData && Array.isArray(includedData)) {
+        const coverArt = includedData.find(item => item.type === 'cover_art' && item.id === coverId);
+        if (coverArt && coverArt.attributes && coverArt.attributes.fileName) {
+            fileName = coverArt.attributes.fileName;
+        }
+    }
+    
+    // If not found in includes, try relationship attributes (some API responses include it)
+    if (!fileName && coverRelationship.attributes && coverRelationship.attributes.fileName) {
+        fileName = coverRelationship.attributes.fileName;
+    }
+    
+    if (!fileName) return null;
+    
+    // Remove file extension if present (MangaDex API returns filename without extension in some cases)
+    const cleanFileName = fileName.replace(/\.(jpg|png|gif|webp)$/i, '');
     
     // Image sizes: 256, 512, or original
     const imageSize = size === 'small' ? '256' : size === 'large' ? '512' : '512';
-    return `https://uploads.mangadex.org/covers/${mangaId}/${fileName}.${imageSize}.jpg`;
+    return `https://uploads.mangadex.org/covers/${mangaId}/${cleanFileName}.${imageSize}.jpg`;
 };
 
 // Helper function to get manga title

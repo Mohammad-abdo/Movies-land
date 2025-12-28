@@ -90,57 +90,56 @@ const BestMoviesSlider = () => {
 
                         return (
                             <div key={movie.id} className="best-movie-card">
-                                <div 
-                                    className="movie-card-backdrop"
-                                    style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${backdropUrl})` }}
+                                <Link 
+                                    to={`/movie/${movie.id}`}
+                                    className="movie-card-link"
                                 >
-                                    <div className="movie-card-content">
-                                        <div className="movie-poster-wrapper">
-                                            <img
-                                                src={posterUrl}
-                                                alt={title}
-                                                className="movie-poster"
-                                                onError={(e) => {
-                                                    e.target.src = 'https://via.placeholder.com/300x450?text=No+Image';
-                                                }}
-                                            />
-                                        </div>
-                                        
-                                        <div className="movie-info">
-                                            <div className="movie-rating">
-                                                <FaStar className="star-icon" />
-                                                <span>{movie.vote_average?.toFixed(1)}</span>
+                                    <div 
+                                        className="movie-card-backdrop"
+                                        style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${backdropUrl})` }}
+                                    >
+                                        <div className="movie-card-content">
+                                            <div className="movie-poster-wrapper">
+                                                <img
+                                                    src={posterUrl}
+                                                    alt={title}
+                                                    className="movie-poster"
+                                                    onError={(e) => {
+                                                        e.target.src = 'https://via.placeholder.com/300x450?text=No+Image';
+                                                    }}
+                                                />
                                             </div>
                                             
-                                            <h3 className="movie-title">{title}</h3>
-                                            
-                                            {movie.overview && (
-                                                <p className="movie-overview">
-                                                    {movie.overview.substring(0, 120)}...
-                                                </p>
-                                            )}
+                                            <div className="movie-info">
+                                                <div className="movie-rating">
+                                                    <FaStar className="star-icon" />
+                                                    <span>{movie.vote_average?.toFixed(1)}</span>
+                                                </div>
+                                                
+                                                <h3 className="movie-title">{title}</h3>
+                                                
+                                                {movie.overview && (
+                                                    <p className="movie-overview">
+                                                        {movie.overview.substring(0, 120)}...
+                                                    </p>
+                                                )}
 
-                                            <div className="movie-actions">
-                                                <Link 
-                                                    to={`/movie/${movie.id}`}
-                                                    className="action-btn watch-btn"
-                                                >
-                                                    <FaPlay /> Watch Now
-                                                </Link>
-                                                <Link
-                                                    to={`/movie/${movie.id}`}
-                                                    className="action-btn info-btn"
-                                                >
-                                                    <FaInfoCircle /> Details
-                                                </Link>
-                                            </div>
+                                                <div className="movie-actions">
+                                                    <div className="action-btn watch-btn">
+                                                        <FaPlay /> Watch Now
+                                                    </div>
+                                                    <div className="action-btn info-btn">
+                                                        <FaInfoCircle /> Details
+                                                    </div>
+                                                </div>
 
-                                            <div className="movie-year">
-                                                {movie.release_date && new Date(movie.release_date).getFullYear()}
+                                                <div className="movie-year">
+                                                    {movie.release_date && new Date(movie.release_date).getFullYear()}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             </div>
                         );
                     })}
