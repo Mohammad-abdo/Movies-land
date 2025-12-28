@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import './Header.scss';
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaSearch, FaBars, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaBars, FaTimes, FaChevronRight } from 'react-icons/fa';
 import { useSelector } from "react-redux";
 import Input from '../input/Input';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -213,65 +213,78 @@ const Header = () => {
             </div>
 
             {/* Mobile Menu Overlay */}
-            {mobileMenuOpen && (
-                <div 
-                    className="mobile-menu-overlay"
-                    onClick={closeMobileMenu}
-                ></div>
-            )}
+            <div 
+                className={`mobile-menu-overlay ${mobileMenuOpen ? 'visible' : ''}`}
+                onClick={closeMobileMenu}
+            ></div>
 
-            {/* Mobile Menu */}
-            <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-                <nav className="mobile-nav">
+            {/* Mobile Sidebar Menu */}
+            <div className={`mobile-sidebar ${mobileMenuOpen ? 'open' : ''}`}>
+                <div className="sidebar-header">
+                    <Link to="/" className="sidebar-logo" onClick={closeMobileMenu}>
+                        <span className="sidebar-logo-text">Movies Land</span>
+                    </Link>
+                    <button 
+                        className="sidebar-close-btn"
+                        onClick={closeMobileMenu}
+                        aria-label="Close menu"
+                    >
+                        <FaTimes />
+                    </button>
+                </div>
+                
+                <nav className="sidebar-nav">
                     {categories.map((category, index) => (
-                        <div key={index} className="mobile-nav-item">
-                            <div 
-                                className="mobile-nav-link-header"
-                            >
-                                {category.subcategories ? (
-                                    <>
-                                        <button
-                                            className="mobile-nav-link mobile-nav-button"
-                                            onClick={() => handleDropdownToggle(index)}
-                                        >
-                                            {category.name}
-                                        </button>
-                                        <span className={`mobile-dropdown-indicator ${activeDropdown === index ? 'open' : ''}`}>
-                                            ▼
-                                        </span>
-                                    </>
-                                ) : (
-                                    <Link 
-                                        to={category.path}
-                                        className="mobile-nav-link"
-                                        onClick={closeMobileMenu}
+                        <div key={index} className="sidebar-nav-item">
+                            {category.subcategories ? (
+                                <>
+                                    <button
+                                        className="sidebar-nav-link sidebar-nav-button"
+                                        onClick={() => handleDropdownToggle(index)}
                                     >
-                                        {category.name}
-                                    </Link>
-                                )}
-                            </div>
-                            {category.subcategories && activeDropdown === index && (
-                                <div className="mobile-submenu">
-                                    {category.subcategories.map((sub, subIndex) => (
-                                        <Link 
-                                            key={subIndex}
-                                            to={sub.path}
-                                            className="mobile-submenu-item"
-                                            onClick={closeMobileMenu}
-                                        >
-                                            {sub.name}
-                                        </Link>
-                                    ))}
-                                </div>
+                                        <span className="sidebar-nav-text">{category.name}</span>
+                                        <span className={`sidebar-dropdown-icon ${activeDropdown === index ? 'open' : ''}`}>
+                                            <FaChevronRight />
+                                        </span>
+                                    </button>
+                                    {activeDropdown === index && (
+                                        <div className="sidebar-submenu">
+                                            {category.subcategories.map((sub, subIndex) => (
+                                                <Link 
+                                                    key={subIndex}
+                                                    to={sub.path}
+                                                    className="sidebar-submenu-item"
+                                                    onClick={closeMobileMenu}
+                                                >
+                                                    {sub.name}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <Link 
+                                    to={category.path}
+                                    className={`sidebar-nav-link ${pathname.startsWith(category.path) ? 'active' : ''}`}
+                                    onClick={closeMobileMenu}
+                                >
+                                    <span className="sidebar-nav-text">{category.name}</span>
+                                </Link>
                             )}
                         </div>
                     ))}
+                    
+                    <div className="sidebar-divider"></div>
+                    
                     <Link 
                         to="/Favorites" 
-                        className="mobile-favorites-link"
+                        className={`sidebar-nav-link sidebar-favorites ${pathname === '/Favorites' ? 'active' : ''}`}
                         onClick={closeMobileMenu}
                     >
-                        {t('nav.favorites')} {favoritesCount > 0 && `(${favoritesCount})`}
+                        <span className="sidebar-nav-text">{t('nav.favorites')}</span>
+                        {favoritesCount > 0 && (
+                            <span className="sidebar-badge">{favoritesCount}</span>
+                        )}
                     </Link>
                 </nav>
             </div>
