@@ -11,6 +11,106 @@
     }
 }
 
+.manga-sidebar-col {
+    @include tablet {
+        display: none;
+    }
+    
+    @include mobile {
+        display: none;
+    }
+}
+
+.manga-content-col {
+    @include tablet {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    @include mobile {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.manga-tabs {
+    margin-top: 2rem;
+    
+    .nav-tabs {
+        border-bottom: 2px solid rgba($white, 0.1);
+        
+        .nav-link {
+            color: rgba($txt-color, 0.7);
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+            
+            &:hover {
+                color: $txt-color;
+                border-bottom-color: rgba($main-color, 0.5);
+            }
+            
+            &.active {
+                color: $main-color;
+                background: transparent;
+                border-bottom-color: $main-color;
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+.manga-sidebar-col {
+    @include tablet {
+        display: none;
+    }
+    
+    @include mobile {
+        display: none;
+    }
+}
+
+.manga-content-col {
+    @include tablet {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    @include mobile {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.manga-tabs {
+    margin-top: 2rem;
+    
+    .nav-tabs {
+        border-bottom: 2px solid rgba($white, 0.1);
+        
+        .nav-link {
+            color: rgba($txt-color, 0.7);
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+            
+            &:hover {
+                color: $txt-color;
+                border-bottom-color: rgba($main-color, 0.5);
+            }
+            
+            &.active {
+                color: $main-color;
+                background: transparent;
+                border-bottom-color: $main-color;
+                font-weight: 600;
+            }
+        }
+    }
+}
+
 .manga-search-section {
     margin: 2rem 0;
     

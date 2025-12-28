@@ -39,13 +39,38 @@ export const getMangaImageUrl = (manga, size = 'medium', includedData = null) =>
     return `https://uploads.mangadex.org/covers/${mangaId}/${cleanFileName}.${imageSize}.jpg`;
 };
 
-// Helper function to get manga title
-export const getMangaTitle = (manga) => {
+// Helper function to get manga title with translation support
+export const getMangaTitle = (manga, preferredLanguage = 'en') => {
     if (!manga.attributes || !manga.attributes.title) return 'Unknown Title';
     
-    // Try to get English title first, then fallback to first available
     const titles = manga.attributes.title;
-    return titles.en || titles['en-us'] || Object.values(titles)[0] || 'Unknown Title';
+    
+    // Try preferred language first (e.g., 'en', 'ar', etc.)
+    if (titles[preferredLanguage]) {
+        return titles[preferredLanguage];
+    }
+    
+    // Try common variations
+    if (preferredLanguage === 'en' && titles['en-us']) {
+        return titles['en-us'];
+    }
+    
+    // Try English
+    if (titles.en) return titles.en;
+    if (titles['en-us']) return titles['en-us'];
+    
+    // Try other common languages
+    if (titles['ja']) return titles['ja'];
+    if (titles['ja-ro']) return titles['ja-ro'];
+    if (titles['ar']) return titles['ar'];
+    
+    // Fallback to first available title
+    const availableTitles = Object.values(titles);
+    if (availableTitles.length > 0) {
+        return availableTitles[0];
+    }
+    
+    return 'Unknown Title';
 };
 
 // Helper function to get manga description
